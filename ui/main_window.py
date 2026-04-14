@@ -1,6 +1,8 @@
 from PyQt6.QtWidgets import QMainWindow, QTabWidget, QWidget, QVBoxLayout
 from ui.tabs.tournament import TournamentTable
 from ui.tabs.matches import MatchesTable
+from config import TABLE_CONFIG
+from ui.tabs.base_tab import GenericTableTab
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -19,14 +21,7 @@ class MainWindow(QMainWindow):
         self.init_tabs()
 
     def init_tabs(self):
-        self.tournament_tab = TournamentTable()
-        self.matches_tab = MatchesTable()
-        self.clubs_tab = QWidget()
-        self.players_tab = QWidget()
-        self.stats_tab = QWidget()
-
-        self.tabs.addTab(self.tournament_tab, "Турнирная таблица")
-        self.tabs.addTab(self.matches_tab, "Календарь матчей")
-        self.tabs.addTab(self.clubs_tab, "Клубы")
-        self.tabs.addTab(self.players_tab, "Игроки")
-        self.tabs.addTab(self.stats_tab, "Статистика")
+        for table_key in TABLE_CONFIG.keys():
+            tab_title = TABLE_CONFIG[table_key]["title"]
+            tab_widget = GenericTableTab(table_key)
+            self.tabs.addTab(tab_widget, tab_title)
