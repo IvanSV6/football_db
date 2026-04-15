@@ -33,12 +33,12 @@ class MatchesTable(QWidget):
         ])
 
         header = self.table.horizontalHeader()
-        header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)  # Растягиваем на всё окно
+        header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
 
-        self.table.verticalHeader().setVisible(False)  # Прячем стандартные номера строк
-        self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)  # Только чтение
-        self.table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)  # Выделять всю строку
+        self.table.verticalHeader().setVisible(False)
+        self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
 
         layout.addWidget(self.table)
 

@@ -1,3 +1,5 @@
+# core/config.py (Полная версия для всех таблиц)
+
 TABLE_CONFIG = {
     "championships": {
         "title": "Чемпионаты",
@@ -34,9 +36,10 @@ TABLE_CONFIG = {
         "title": "Сезоны",
         "fields": [
             {"column": "season_id", "label": "ID", "type": "hidden"},
-            {"column": "championship_id", "label": "ID Чемпионата", "type": "number"},
-            {"column": "start_date", "label": "Дата начала", "type": "date"},
-            {"column": "end_date", "label": "Дата окончания", "type": "date"},
+            {"column": "championship_id", "label": "Чемпионат", "type": "combo",
+             "relation": {"table": "championships", "id_col": "championship_id", "name_col": "name"}},
+            {"column": "start_date", "label": "Начало", "type": "date"},
+            {"column": "end_date", "label": "Конец", "type": "date"},
             {"column": "status", "label": "Статус", "type": "text"}
         ]
     },
@@ -44,13 +47,16 @@ TABLE_CONFIG = {
         "title": "Матчи",
         "fields": [
             {"column": "match_id", "label": "ID", "type": "hidden"},
-            {"column": "season_id", "label": "ID Сезона", "type": "number"},
-            {"column": "home_team_id", "label": "ID Хозяев", "type": "number"},
-            {"column": "away_team_id", "label": "ID Гостей", "type": "number"},
-            {"column": "match_date", "label": "Дата матча", "type": "date"},
+            {"column": "season_id", "label": "Сезон", "type": "combo",
+             "relation": {"table": "seasons", "id_col": "season_id", "name_col": "start_date"}},
+            {"column": "home_team_id", "label": "Хозяева", "type": "combo",
+             "relation": {"table": "teams", "id_col": "team_id", "name_col": "name"}},
+            {"column": "away_team_id", "label": "Гости", "type": "combo",
+             "relation": {"table": "teams", "id_col": "team_id", "name_col": "name"}},
+            {"column": "match_date", "label": "Дата и время", "type": "date"},
             {"column": "tour", "label": "Тур", "type": "number"},
-            {"column": "home_score", "label": "Голы (Хозяева)", "type": "number"},
-            {"column": "away_score", "label": "Голы (Гости)", "type": "number"},
+            {"column": "home_score", "label": "Голы (Дома)", "type": "number"},
+            {"column": "away_score", "label": "Голы (В гостях)", "type": "number"},
             {"column": "status", "label": "Статус", "type": "text"}
         ]
     },
@@ -58,29 +64,36 @@ TABLE_CONFIG = {
         "title": "Контракты",
         "fields": [
             {"column": "contract_id", "label": "ID", "type": "hidden"},
-            {"column": "team_id", "label": "ID Команды", "type": "number"},
-            {"column": "player_id", "label": "ID Игрока", "type": "number"},
+            {"column": "team_id", "label": "Команда", "type": "combo",
+             "relation": {"table": "teams", "id_col": "team_id", "name_col": "name"}},
+            {"column": "player_id", "label": "Игрок", "type": "combo",
+             "relation": {"table": "players", "id_col": "player_id", "name_col": "full_name"}},
             {"column": "start_date", "label": "Начало", "type": "date"},
-            {"column": "end_date", "label": "Окончание", "type": "date"}
+            {"column": "end_date", "label": "Конец", "type": "date"}
         ]
     },
     "match_events": {
         "title": "События матча",
         "fields": [
             {"column": "event_id", "label": "ID", "type": "hidden"},
-            {"column": "match_id", "label": "ID Матча", "type": "number"},
-            {"column": "player_id", "label": "ID Игрока", "type": "number"},
-            {"column": "assist_player_id", "label": "ID Ассистента", "type": "number"},
-            {"column": "event_type", "label": "Тип события", "type": "text"},
+            {"column": "match_id", "label": "ID Матча (Дата)", "type": "combo",
+             "relation": {"table": "matches", "id_col": "match_id", "name_col": "match_date"}},
+            {"column": "player_id", "label": "Автор", "type": "combo",
+             "relation": {"table": "players", "id_col": "player_id", "name_col": "full_name"}},
+            {"column": "assist_player_id", "label": "Ассистент", "type": "combo",
+             "relation": {"table": "players", "id_col": "player_id", "name_col": "full_name"}},
+            {"column": "event_type", "label": "Тип (Гол/Карточка)", "type": "text"},
             {"column": "minute", "label": "Минута", "type": "number"}
         ]
     },
     "team_stats": {
-        "title": "Статистика команд",
+        "title": "Статистика",
         "fields": [
             {"column": "stats_id", "label": "ID", "type": "hidden"},
-            {"column": "match_id", "label": "ID Матча", "type": "number"},
-            {"column": "team_id", "label": "ID Команды", "type": "number"},
+            {"column": "match_id", "label": "Матч", "type": "combo",
+             "relation": {"table": "matches", "id_col": "match_id", "name_col": "match_date"}},
+            {"column": "team_id", "label": "Команда", "type": "combo",
+             "relation": {"table": "teams", "id_col": "team_id", "name_col": "name"}},
             {"column": "possession", "label": "Владение (%)", "type": "number"},
             {"column": "shots", "label": "Удары", "type": "number"},
             {"column": "shots_on_target", "label": "В створ", "type": "number"},
@@ -90,11 +103,13 @@ TABLE_CONFIG = {
         ]
     },
     "season_teams": {
-        "title": "Участники сезонов",
+        "title": "Составы лиг",
         "fields": [
             {"column": "entry_id", "label": "ID", "type": "hidden"},
-            {"column": "season_id", "label": "ID Сезона", "type": "number"},
-            {"column": "team_id", "label": "ID Команды", "type": "number"}
+            {"column": "season_id", "label": "Сезон", "type": "combo",
+             "relation": {"table": "seasons", "id_col": "season_id", "name_col": "start_date"}},
+            {"column": "team_id", "label": "Команда", "type": "combo",
+             "relation": {"table": "teams", "id_col": "team_id", "name_col": "name"}}
         ]
     }
 }

@@ -27,7 +27,7 @@ def insert_record(table, data):
     conn = db.get_connection()
     if not conn: return False
     try:
-        with conn.cursor() as cursor:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
             columns = data.keys()
             values = [data[col] for col in columns]
 
@@ -41,6 +41,53 @@ def insert_record(table, data):
             return True
     except Exception as e:
         print(f"Ошибка INSERT: {e}")
+        conn.rollback()
+        return False
+    finally:
+        db.close_connection()
+
+def update_record(table, id_column, record_id, data):
+    conn = db.get_connection()
+    if not conn: return False
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            columns = data.keys()
+            values = [data[col] for col in columns]
+            values.append(record_id)
+
+            set_clause = sql.SQL(', ').join(
+                [sql.SQL("{} = %s").format(sql.Identifier(col)) for col in columns]
+            )
+
+            query = sql.SQL("UPDATE {table} SET {clause} WHERE {id_field} = %s").format(
+                table=sql.Identifier(table),
+                clause=set_clause,
+                id_field=sql.Identifier(id_column)
+            )
+            cursor.execute(query, values)
+            conn.commit()
+            return True
+    except Exception as e:
+        print(f"Ошибка UPDATE: {e}")
+        conn.rollback()
+        return False
+    finally:
+        db.close_connection()
+
+def delete_record(table, id_column, record_id):
+    conn = db.get_connection()
+    if not conn: return False
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            query = sql.SQL("DELETE FROM {table} WHERE {id_field} = %s").format(
+                table=sql.Identifier(table),
+                id_field=sql.Identifier(id_column)
+            )
+            cursor.execute(query, (record_id,))
+            conn.commit()
+            return True
+    except Exception as e:
+        print(f"Ошибка DELETE: {e}")
         conn.rollback()
         return False
     finally:

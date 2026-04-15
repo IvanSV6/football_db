@@ -12,6 +12,7 @@ class DatabaseConnection:
             except Exception as error:
                 print(f"Ошибка подключения к базе данных {error}")
                 return None
+
     def close_connection(self):
         if self.connection is not None and self.connection.closed == 0:
             self.connection.close()
