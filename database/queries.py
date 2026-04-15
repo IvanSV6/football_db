@@ -10,13 +10,21 @@ def get_all_table(table):
 
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cursor:
-            query = f"SELECT * FROM {table};"
+            if table == "seasons":
+                query = """
+                                SELECT s.*, c.name || ' (' || s.start_date || ')' as season_label
+                                FROM seasons s
+                                JOIN championships c ON s.championship_id = c.championship_id;
+                            """
+            else:
+                query = f"SELECT * FROM {table};"
+
             cursor.execute(query)
             result = cursor.fetchall()
             return result
 
     except Exception as e:
-        print(f"Ошибка при получении данных из таблицы: {table}")
+        print(f"Ошибка при получении данных из таблицы: {e}")
         return []
 
     finally:

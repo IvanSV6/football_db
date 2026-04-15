@@ -107,9 +107,13 @@ TABLE_CONFIG = {
         "fields": [
             {"column": "entry_id", "label": "ID", "type": "hidden"},
             {"column": "season_id", "label": "Сезон", "type": "combo",
-             "relation": {"table": "seasons", "id_col": "season_id", "name_col": "start_date"}},
+             "relation": {
+                 "table": "seasons",
+                 "id_col": "season_id",
+                 "name_col": "season_label"
+             }},
             {"column": "team_id", "label": "Команда", "type": "combo",
              "relation": {"table": "teams", "id_col": "team_id", "name_col": "name"}}
         ]
-    }
+    },
 }

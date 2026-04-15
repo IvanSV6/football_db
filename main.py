@@ -7,7 +7,7 @@ from qt_material import apply_stylesheet
 def main():
     app = QApplication(sys.argv)
     window = MainWindow()
-    apply_stylesheet(app, theme='dark_teal.xml')
+    apply_stylesheet(app, theme='dark_blue.xml')
     window.show()
     sys.exit(app.exec())
 
