@@ -45,7 +45,6 @@ class UniversalDialog(QDialog):
         layout.addWidget(btn_save)
 
     def create_widget(self, field):
-        """Создает виджет на основе типа данных из конфига"""
         f_type = field["type"]
 
         if f_type == "boolean":
@@ -84,7 +83,6 @@ class UniversalDialog(QDialog):
                 widget.setDate(QDate.fromString(value, "yyyy-MM-dd"))
 
         elif f_type == "combo":
-            # Находим, под каким индексом в списке прячется наш ID
             index = widget.findData(value)
             if index >= 0:
                 widget.setCurrentIndex(index)
@@ -101,7 +99,6 @@ class UniversalDialog(QDialog):
                 result[col] = widget.date().toString("yyyy-MM-dd")
 
             elif isinstance(widget, QComboBox):
-                # currentData() возвращает скрытый ID, а не текст!
                 result[col] = widget.currentData()
 
             else:

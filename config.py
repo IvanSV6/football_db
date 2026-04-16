@@ -1,5 +1,3 @@
-# core/config.py (Полная версия для всех таблиц)
-
 TABLE_CONFIG = {
     "championships": {
         "title": "Чемпионаты",
