@@ -3,6 +3,24 @@ from psycopg2.extras import RealDictCursor
 from psycopg2 import sql
 
 
+def get_one(table_name, id_column, id_value):
+    conn = db.get_connection()
+    if not conn: return []
+
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            query = f"SELECT * FROM {table_name} WHERE {id_column} = %s;"
+            cursor.execute(query, (id_value,))
+            result = cursor.fetchone()
+            return result
+
+    except Exception as e:
+        print(f"Ошибка при получении данных из таблицы: {e}")
+        return []
+    finally:
+        db.close_connection()
+
+
 def get_all_table(table):
     conn = db.get_connection()
     if not conn:

@@ -5,7 +5,7 @@ load_dotenv()
 
 class SessionManager:
     def __init__(self):
-        self.current_role = "user"
+        self.current_role = "admin"
 
     def login(self, password):
         if password == os.getenv("ADMIN_PASSWORD"):

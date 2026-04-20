@@ -1,4 +1,4 @@
-from database.queries import get_all_table, insert_record, delete_record, update_record
+from database.queries import get_all_table, insert_record, delete_record, update_record, get_one
 from config import TABLE_CONFIG
 
 class DataManager:
@@ -10,6 +10,9 @@ class DataManager:
             if field["type"] == "hidden":
                 return field["column"]
         return None
+
+    def _get_one(self, table, id_col, id_val):
+        return get_one(table, id_col, id_val)
 
     def up_record(self, table_name, record_id, data):
         id_col = self._get_id_column(table_name)

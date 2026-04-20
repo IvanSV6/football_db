@@ -114,7 +114,7 @@ class GenericTableTab(QWidget):
 
         reply = QMessageBox.question(self, "Подтверждение", "Вы уверены, что хотите удалить запись?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
 
-        if reply == QMessageBox.StandardButton.Yes1:
+        if reply == QMessageBox.StandardButton.Yes:
             all_data = data_manager.get_all(self.table_name)
             record_id = all_data[selected_row][data_manager._get_id_column(self.table_name)]
 
