@@ -11,7 +11,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Футбольные чемпионаты")
-        self.resize(1200, 550)
+        self.resize(1200, 660)
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)

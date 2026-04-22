@@ -25,7 +25,6 @@ def get_all_table(table):
     conn = db.get_connection()
     if not conn:
         return []
-
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cursor:
             if table == "seasons":
@@ -119,6 +118,95 @@ def delete_record(table, id_column, record_id):
     finally:
         db.close_connection()
 
-if __name__ == "__main__":
-    teams = get_all_table("teams")
-    print(teams)
+def get_tournament_table(season_id):
+    conn = db.get_connection()
+    if not conn:
+        return []
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            query = """
+                WITH team_results AS (
+                    SELECT 
+                        home_team_id AS team_id,
+                        home_score AS gs,
+                        away_score AS ga,
+                        CASE WHEN home_score > away_score THEN 3 
+                             WHEN home_score = away_score THEN 1 ELSE 0 END AS pts,
+                        CASE WHEN home_score > away_score THEN 1 ELSE 0 END AS win,
+                        CASE WHEN home_score = away_score THEN 1 ELSE 0 END AS draw,
+                        CASE WHEN home_score < away_score THEN 1 ELSE 0 END AS loss
+                    FROM matches 
+                    WHERE season_id = %s 
+
+                    UNION ALL
+                    
+                    SELECT 
+                        away_team_id AS team_id,
+                        away_score AS gs,
+                        home_score AS ga,
+                        CASE WHEN away_score > home_score THEN 3 
+                             WHEN away_score = home_score THEN 1 ELSE 0 END AS pts,
+                        CASE WHEN away_score > home_score THEN 1 ELSE 0 END AS win,
+                        CASE WHEN away_score = home_score THEN 1 ELSE 0 END AS draw,
+                        CASE WHEN away_score < home_score THEN 1 ELSE 0 END AS loss
+                    FROM matches 
+                    WHERE season_id = %s 
+                )
+                SELECT 
+                    t.name,
+                    COUNT(*) AS played,
+                    SUM(tr.win) AS win,
+                    SUM(tr.draw) AS draw,
+                    SUM(tr.loss) AS loss,
+                    SUM(tr.gs) AS gs,
+                    SUM(tr.ga) AS ga,
+                    SUM(tr.pts) AS pts,
+                    t.team_id
+                FROM team_results tr
+                JOIN teams t ON tr.team_id = t.team_id
+                GROUP BY t.team_id, t.name
+                ORDER BY pts DESC, (SUM(gs) - SUM(ga)) DESC, SUM(gs) DESC;
+            """
+            cursor.execute(query, (season_id, season_id))
+            result = cursor.fetchall()
+            return result
+
+    except Exception as e:
+        print(f"Ошибка при формировании турнирной таблицы: {e}")
+        return []
+    finally:
+        db.close_connection()
+
+
+def get_team_form(team_id, season_id):
+    conn = db.get_connection()
+    if not conn:
+        return []
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            query = """
+                SELECT res FROM (
+                    SELECT 
+                        CASE WHEN (home_team_id = %s AND home_score > away_score) OR 
+                                  (away_team_id = %s AND away_score > home_score) THEN 'В'
+                             WHEN home_score = away_score THEN 'Н'
+                             ELSE 'П' END as res,
+                        match_date
+                    FROM matches 
+                    WHERE season_id = %s
+                      AND (home_team_id = %s OR away_team_id = %s)
+                    ORDER BY match_date DESC
+                    LIMIT 5
+                ) sub ORDER BY match_date ASC;
+            """
+            cursor.execute(query, (team_id, team_id, season_id, team_id, team_id))
+            result = cursor.fetchall()
+            print(result)
+            return result
+
+    except Exception as e:
+        print(f"Ошибка при получении формы команды: {e}")
+        return []
+    finally:
+        db.close_connection()
+

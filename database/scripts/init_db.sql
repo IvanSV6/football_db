@@ -2,12 +2,12 @@
 -- PostgreSQL database dump
 --
 
-\restrict tSJ0uxgESv8gDrVtkAlAttf00fjoUsaS5MHKwvvH9GPOyfqk51BPEJF36L01JHT
+\restrict duw9KKEvqCE4IebvEudnDEOe9ptjxmgUIBLL1myN1UWPjeTl2aHsdxmeAPVMax5
 
--- Dumped from database version 18.1
--- Dumped by pg_dump version 18.1
+-- Dumped from database version 18.3
+-- Dumped by pg_dump version 18.3
 
--- Started on 2026-04-03 12:09:30
+-- Started on 2026-04-22 18:55:51 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -22,7 +22,7 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 237 (class 1255 OID 16624)
+-- TOC entry 237 (class 1255 OID 16385)
 -- Name: check_match_date_in_season(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -45,7 +45,7 @@ $$;
 ALTER FUNCTION public.check_match_date_in_season() OWNER TO postgres;
 
 --
--- TOC entry 238 (class 1255 OID 16628)
+-- TOC entry 238 (class 1255 OID 16386)
 -- Name: check_team_limit(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -74,7 +74,7 @@ $$;
 ALTER FUNCTION public.check_team_limit() OWNER TO postgres;
 
 --
--- TOC entry 251 (class 1255 OID 16632)
+-- TOC entry 250 (class 1255 OID 16387)
 -- Name: fn_check_player_status_after_card(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -119,7 +119,7 @@ $$;
 ALTER FUNCTION public.fn_check_player_status_after_card() OWNER TO postgres;
 
 --
--- TOC entry 239 (class 1255 OID 16630)
+-- TOC entry 251 (class 1255 OID 16388)
 -- Name: fn_check_team_tour_limit(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -153,7 +153,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 220 (class 1259 OID 16407)
+-- TOC entry 219 (class 1259 OID 16389)
 -- Name: championships; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -170,7 +170,7 @@ CREATE TABLE public.championships (
 ALTER TABLE public.championships OWNER TO postgres;
 
 --
--- TOC entry 219 (class 1259 OID 16406)
+-- TOC entry 220 (class 1259 OID 16401)
 -- Name: championships_championships_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -186,8 +186,8 @@ CREATE SEQUENCE public.championships_championships_id_seq
 ALTER SEQUENCE public.championships_championships_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5122 (class 0 OID 0)
--- Dependencies: 219
+-- TOC entry 3552 (class 0 OID 0)
+-- Dependencies: 220
 -- Name: championships_championships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -195,7 +195,7 @@ ALTER SEQUENCE public.championships_championships_id_seq OWNED BY public.champio
 
 
 --
--- TOC entry 230 (class 1259 OID 16503)
+-- TOC entry 221 (class 1259 OID 16402)
 -- Name: contracts; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -211,7 +211,7 @@ CREATE TABLE public.contracts (
 ALTER TABLE public.contracts OWNER TO postgres;
 
 --
--- TOC entry 229 (class 1259 OID 16502)
+-- TOC entry 222 (class 1259 OID 16409)
 -- Name: contracts_contract_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -227,8 +227,8 @@ CREATE SEQUENCE public.contracts_contract_id_seq
 ALTER SEQUENCE public.contracts_contract_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5123 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 3553 (class 0 OID 0)
+-- Dependencies: 222
 -- Name: contracts_contract_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -236,7 +236,7 @@ ALTER SEQUENCE public.contracts_contract_id_seq OWNED BY public.contracts.contra
 
 
 --
--- TOC entry 234 (class 1259 OID 16566)
+-- TOC entry 223 (class 1259 OID 16410)
 -- Name: match_events; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -254,7 +254,7 @@ CREATE TABLE public.match_events (
 ALTER TABLE public.match_events OWNER TO postgres;
 
 --
--- TOC entry 233 (class 1259 OID 16565)
+-- TOC entry 224 (class 1259 OID 16421)
 -- Name: match_events_event_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -270,8 +270,8 @@ CREATE SEQUENCE public.match_events_event_id_seq
 ALTER SEQUENCE public.match_events_event_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5124 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 3554 (class 0 OID 0)
+-- Dependencies: 224
 -- Name: match_events_event_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -279,7 +279,7 @@ ALTER SEQUENCE public.match_events_event_id_seq OWNED BY public.match_events.eve
 
 
 --
--- TOC entry 232 (class 1259 OID 16524)
+-- TOC entry 225 (class 1259 OID 16422)
 -- Name: matches; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -301,7 +301,7 @@ CREATE TABLE public.matches (
 ALTER TABLE public.matches OWNER TO postgres;
 
 --
--- TOC entry 231 (class 1259 OID 16523)
+-- TOC entry 226 (class 1259 OID 16440)
 -- Name: matches_match_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -317,8 +317,8 @@ CREATE SEQUENCE public.matches_match_id_seq
 ALTER SEQUENCE public.matches_match_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5125 (class 0 OID 0)
--- Dependencies: 231
+-- TOC entry 3555 (class 0 OID 0)
+-- Dependencies: 226
 -- Name: matches_match_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -326,7 +326,7 @@ ALTER SEQUENCE public.matches_match_id_seq OWNED BY public.matches.match_id;
 
 
 --
--- TOC entry 226 (class 1259 OID 16469)
+-- TOC entry 227 (class 1259 OID 16441)
 -- Name: players; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -342,7 +342,7 @@ CREATE TABLE public.players (
 ALTER TABLE public.players OWNER TO postgres;
 
 --
--- TOC entry 225 (class 1259 OID 16468)
+-- TOC entry 228 (class 1259 OID 16451)
 -- Name: players_player_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -358,8 +358,8 @@ CREATE SEQUENCE public.players_player_id_seq
 ALTER SEQUENCE public.players_player_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5126 (class 0 OID 0)
--- Dependencies: 225
+-- TOC entry 3556 (class 0 OID 0)
+-- Dependencies: 228
 -- Name: players_player_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -367,7 +367,7 @@ ALTER SEQUENCE public.players_player_id_seq OWNED BY public.players.player_id;
 
 
 --
--- TOC entry 228 (class 1259 OID 16483)
+-- TOC entry 229 (class 1259 OID 16452)
 -- Name: season_teams; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -381,7 +381,7 @@ CREATE TABLE public.season_teams (
 ALTER TABLE public.season_teams OWNER TO postgres;
 
 --
--- TOC entry 222 (class 1259 OID 16437)
+-- TOC entry 230 (class 1259 OID 16458)
 -- Name: seasons; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -398,7 +398,7 @@ CREATE TABLE public.seasons (
 ALTER TABLE public.seasons OWNER TO postgres;
 
 --
--- TOC entry 221 (class 1259 OID 16436)
+-- TOC entry 231 (class 1259 OID 16469)
 -- Name: seasons_season_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -414,8 +414,8 @@ CREATE SEQUENCE public.seasons_season_id_seq
 ALTER SEQUENCE public.seasons_season_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5127 (class 0 OID 0)
--- Dependencies: 221
+-- TOC entry 3557 (class 0 OID 0)
+-- Dependencies: 231
 -- Name: seasons_season_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -423,7 +423,7 @@ ALTER SEQUENCE public.seasons_season_id_seq OWNED BY public.seasons.season_id;
 
 
 --
--- TOC entry 227 (class 1259 OID 16482)
+-- TOC entry 232 (class 1259 OID 16470)
 -- Name: seasons_team_entry_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -439,8 +439,8 @@ CREATE SEQUENCE public.seasons_team_entry_id_seq
 ALTER SEQUENCE public.seasons_team_entry_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5128 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 3558 (class 0 OID 0)
+-- Dependencies: 232
 -- Name: seasons_team_entry_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -448,7 +448,7 @@ ALTER SEQUENCE public.seasons_team_entry_id_seq OWNED BY public.season_teams.ent
 
 
 --
--- TOC entry 236 (class 1259 OID 16595)
+-- TOC entry 233 (class 1259 OID 16471)
 -- Name: team_stats; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -469,7 +469,7 @@ CREATE TABLE public.team_stats (
 ALTER TABLE public.team_stats OWNER TO postgres;
 
 --
--- TOC entry 235 (class 1259 OID 16594)
+-- TOC entry 234 (class 1259 OID 16484)
 -- Name: team_stats_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -485,8 +485,8 @@ CREATE SEQUENCE public.team_stats_stats_id_seq
 ALTER SEQUENCE public.team_stats_stats_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5129 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 3559 (class 0 OID 0)
+-- Dependencies: 234
 -- Name: team_stats_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -494,7 +494,7 @@ ALTER SEQUENCE public.team_stats_stats_id_seq OWNED BY public.team_stats.stats_i
 
 
 --
--- TOC entry 224 (class 1259 OID 16456)
+-- TOC entry 235 (class 1259 OID 16485)
 -- Name: teams; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -510,7 +510,7 @@ CREATE TABLE public.teams (
 ALTER TABLE public.teams OWNER TO postgres;
 
 --
--- TOC entry 223 (class 1259 OID 16455)
+-- TOC entry 236 (class 1259 OID 16494)
 -- Name: teams_team_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -526,8 +526,8 @@ CREATE SEQUENCE public.teams_team_id_seq
 ALTER SEQUENCE public.teams_team_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5130 (class 0 OID 0)
--- Dependencies: 223
+-- TOC entry 3560 (class 0 OID 0)
+-- Dependencies: 236
 -- Name: teams_team_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -535,7 +535,7 @@ ALTER SEQUENCE public.teams_team_id_seq OWNED BY public.teams.team_id;
 
 
 --
--- TOC entry 4900 (class 2604 OID 16410)
+-- TOC entry 3330 (class 2604 OID 16495)
 -- Name: championships championship_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -543,7 +543,7 @@ ALTER TABLE ONLY public.championships ALTER COLUMN championship_id SET DEFAULT n
 
 
 --
--- TOC entry 4906 (class 2604 OID 16506)
+-- TOC entry 3332 (class 2604 OID 16496)
 -- Name: contracts contract_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -551,7 +551,7 @@ ALTER TABLE ONLY public.contracts ALTER COLUMN contract_id SET DEFAULT nextval('
 
 
 --
--- TOC entry 4910 (class 2604 OID 16569)
+-- TOC entry 3333 (class 2604 OID 16497)
 -- Name: match_events event_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -559,7 +559,7 @@ ALTER TABLE ONLY public.match_events ALTER COLUMN event_id SET DEFAULT nextval('
 
 
 --
--- TOC entry 4907 (class 2604 OID 16527)
+-- TOC entry 3334 (class 2604 OID 16498)
 -- Name: matches match_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -567,7 +567,7 @@ ALTER TABLE ONLY public.matches ALTER COLUMN match_id SET DEFAULT nextval('publi
 
 
 --
--- TOC entry 4904 (class 2604 OID 16472)
+-- TOC entry 3337 (class 2604 OID 16499)
 -- Name: players player_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -575,7 +575,7 @@ ALTER TABLE ONLY public.players ALTER COLUMN player_id SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 4905 (class 2604 OID 16486)
+-- TOC entry 3338 (class 2604 OID 16500)
 -- Name: season_teams entry_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -583,7 +583,7 @@ ALTER TABLE ONLY public.season_teams ALTER COLUMN entry_id SET DEFAULT nextval('
 
 
 --
--- TOC entry 4902 (class 2604 OID 16440)
+-- TOC entry 3339 (class 2604 OID 16501)
 -- Name: seasons season_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -591,7 +591,7 @@ ALTER TABLE ONLY public.seasons ALTER COLUMN season_id SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 4911 (class 2604 OID 16598)
+-- TOC entry 3340 (class 2604 OID 16502)
 -- Name: team_stats stats_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -599,7 +599,7 @@ ALTER TABLE ONLY public.team_stats ALTER COLUMN stats_id SET DEFAULT nextval('pu
 
 
 --
--- TOC entry 4903 (class 2604 OID 16459)
+-- TOC entry 3341 (class 2604 OID 16503)
 -- Name: teams team_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -607,8 +607,8 @@ ALTER TABLE ONLY public.teams ALTER COLUMN team_id SET DEFAULT nextval('public.t
 
 
 --
--- TOC entry 5100 (class 0 OID 16407)
--- Dependencies: 220
+-- TOC entry 3529 (class 0 OID 16389)
+-- Dependencies: 219
 -- Data for Name: championships; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -620,8 +620,8 @@ COPY public.championships (championship_id, name, country, division_level, team_
 
 
 --
--- TOC entry 5110 (class 0 OID 16503)
--- Dependencies: 230
+-- TOC entry 3531 (class 0 OID 16402)
+-- Dependencies: 221
 -- Data for Name: contracts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -629,12 +629,13 @@ COPY public.contracts (contract_id, team_id, player_id, start_date, end_date) FR
 1	10	7	2020-01-01	2025-06-30
 2	13	8	2010-01-01	2024-06-30
 3	11	9	2003-01-01	2025-06-30
+4	10	8	2026-04-20	2026-04-20
 \.
 
 
 --
--- TOC entry 5114 (class 0 OID 16566)
--- Dependencies: 234
+-- TOC entry 3533 (class 0 OID 16410)
+-- Dependencies: 223
 -- Data for Name: match_events; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -646,21 +647,53 @@ COPY public.match_events (event_id, match_id, player_id, assist_player_id, event
 
 
 --
--- TOC entry 5112 (class 0 OID 16524)
--- Dependencies: 232
+-- TOC entry 3535 (class 0 OID 16422)
+-- Dependencies: 225
 -- Data for Name: matches; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.matches (match_id, season_id, home_team_id, away_team_id, match_date, tour, home_score, away_score, status) FROM stdin;
-10	13	10	13	2023-08-20 19:30:00	5	1	2	Сыгран
 7	15	11	12	2023-10-28 17:15:00	11	2	0	Сыгран
 11	15	12	11	2023-09-15 18:00:00	4	4	0	Сыгран
+13	14	10	15	2025-10-01 00:00:00	1	2	4	Сыгран
+40	13	10	13	2023-08-01 18:00:00	1	2	1	Сыгран
+41	13	14	15	2023-08-01 20:00:00	1	1	1	Сыгран
+42	13	18	19	2023-08-02 18:00:00	1	3	0	Сыгран
+43	13	20	21	2023-08-02 20:00:00	1	0	2	Сыгран
+44	13	22	23	2023-08-03 18:00:00	1	1	0	Сыгран
+45	13	24	25	2023-08-03 20:00:00	1	2	2	Сыгран
+46	13	26	27	2023-08-04 18:00:00	1	0	1	Сыгран
+47	13	28	29	2023-08-04 20:00:00	1	3	1	Сыгран
+48	13	13	14	2023-08-08 18:00:00	2	0	2	Сыгран
+49	13	15	10	2023-08-08 20:00:00	2	1	3	Сыгран
+50	13	19	20	2023-08-09 18:00:00	2	2	0	Сыгран
+51	13	21	18	2023-08-09 20:00:00	2	1	1	Сыгран
+52	13	23	24	2023-08-10 18:00:00	2	0	0	Сыгран
+53	13	25	22	2023-08-10 20:00:00	2	1	2	Сыгран
+54	13	27	28	2023-08-11 18:00:00	2	2	2	Сыгран
+55	13	29	26	2023-08-11 20:00:00	2	1	0	Сыгран
+56	13	10	14	2023-08-15 18:00:00	3	2	2	Сыгран
+57	13	13	15	2023-08-15 20:00:00	3	3	1	Сыгран
+58	13	18	20	2023-08-16 18:00:00	3	0	1	Сыгран
+59	13	19	21	2023-08-16 20:00:00	3	2	3	Сыгран
+60	13	22	24	2023-08-17 18:00:00	3	1	1	Сыгран
+61	13	23	25	2023-08-17 20:00:00	3	2	0	Сыгран
+62	13	26	28	2023-08-18 18:00:00	3	1	3	Сыгран
+63	13	27	29	2023-08-18 20:00:00	3	0	2	Сыгран
+64	13	10	15	2023-08-22 18:00:00	4	1	0	Сыгран
+65	13	13	18	2023-08-22 20:00:00	4	2	2	Сыгран
+66	13	14	19	2023-08-23 18:00:00	4	3	1	Сыгран
+67	13	20	22	2023-08-23 20:00:00	4	0	1	Сыгран
+68	13	21	23	2023-08-24 18:00:00	4	2	0	Сыгран
+69	13	24	26	2023-08-24 20:00:00	4	1	1	Сыгран
+70	13	25	27	2023-08-25 18:00:00	4	0	2	Сыгран
+71	13	28	29	2023-08-25 20:00:00	4	3	2	Сыгран
 \.
 
 
 --
--- TOC entry 5106 (class 0 OID 16469)
--- Dependencies: 226
+-- TOC entry 3537 (class 0 OID 16441)
+-- Dependencies: 227
 -- Data for Name: players; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -669,14 +702,14 @@ COPY public.players (player_id, full_name, birth_date, nationality, "position") 
 8	Квинси Промес	1992-01-04	Нидерланды	Полузащитник
 9	Лука Модрич	1985-09-09	Хорватия	Полузащитник
 10	Криштиану Роналду	1985-02-05	Портуналия	Нападающий
-11	Лионель Месси	1987-06-24	Аргентина	Нападающий
-12	Александр Кокорин	1994-03-07	Россия	Нападающий
+13	Савенков Иван	2006-11-01	Россия	Полузащитник
+11	Леонель Месси	1987-06-24	Аргентина	Нападающий
 \.
 
 
 --
--- TOC entry 5108 (class 0 OID 16483)
--- Dependencies: 228
+-- TOC entry 3539 (class 0 OID 16452)
+-- Dependencies: 229
 -- Data for Name: season_teams; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -686,12 +719,25 @@ COPY public.season_teams (entry_id, season_id, team_id) FROM stdin;
 3	14	10
 4	15	11
 5	15	12
+6	13	15
+7	13	14
+8	13	14
+9	13	15
+10	13	18
+11	13	19
+12	13	20
+13	13	21
+15	13	22
+16	13	23
+17	13	24
+18	13	25
+19	13	26
 \.
 
 
 --
--- TOC entry 5102 (class 0 OID 16437)
--- Dependencies: 222
+-- TOC entry 3540 (class 0 OID 16458)
+-- Dependencies: 230
 -- Data for Name: seasons; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -703,21 +749,20 @@ COPY public.seasons (season_id, championship_id, start_date, end_date, status) F
 
 
 --
--- TOC entry 5116 (class 0 OID 16595)
--- Dependencies: 236
+-- TOC entry 3543 (class 0 OID 16471)
+-- Dependencies: 233
 -- Data for Name: team_stats; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.team_stats (stats_id, match_id, team_id, possession, shots, shots_on_target, corners, fouls, offsides) FROM stdin;
 2	7	11	45	10	4	5	3	6
 3	7	12	55	12	7	3	4	5
-4	10	10	50	8	2	4	4	6
 \.
 
 
 --
--- TOC entry 5104 (class 0 OID 16456)
--- Dependencies: 224
+-- TOC entry 3545 (class 0 OID 16485)
+-- Dependencies: 235
 -- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -728,30 +773,42 @@ COPY public.teams (team_id, name, city, founded_year, stadium) FROM stdin;
 13	Спартак	Москва	1922	Открытие Арена
 14	ЦСКА	Москва	1911	ВЭБ Арена
 15	Динамо	Москва	1923	ВТБ Арена
+18	Краснодар	Краснодар	2008	
+19	Локомотив	Москва	1922	
+20	Балтика	Калининград	2000	
+21	Рубин	Казань	2000	
+22	Ахмат	Грозный	1990	
+23	Ростов	Ростов-на-Дону	1980	
+24	Крылья Советов	Самара	1930	
+25	Акрон	Тольятти	1980	
+26	Оренбург	Оренбург	1950	
+27	Урал	Екатеринбург	1930	Екатеринбург Арена
+28	Сочи	Сочи	2018	Фишт
+29	Факел	Воронеж	1947	Центральный стадион профсоюзов
 \.
 
 
 --
--- TOC entry 5131 (class 0 OID 0)
--- Dependencies: 219
+-- TOC entry 3561 (class 0 OID 0)
+-- Dependencies: 220
 -- Name: championships_championships_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.championships_championships_id_seq', 9, true);
+SELECT pg_catalog.setval('public.championships_championships_id_seq', 11, true);
 
 
 --
--- TOC entry 5132 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 3562 (class 0 OID 0)
+-- Dependencies: 222
 -- Name: contracts_contract_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.contracts_contract_id_seq', 3, true);
+SELECT pg_catalog.setval('public.contracts_contract_id_seq', 4, true);
 
 
 --
--- TOC entry 5133 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 3563 (class 0 OID 0)
+-- Dependencies: 224
 -- Name: match_events_event_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -759,44 +816,44 @@ SELECT pg_catalog.setval('public.match_events_event_id_seq', 3, true);
 
 
 --
--- TOC entry 5134 (class 0 OID 0)
--- Dependencies: 231
+-- TOC entry 3564 (class 0 OID 0)
+-- Dependencies: 226
 -- Name: matches_match_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.matches_match_id_seq', 11, true);
+SELECT pg_catalog.setval('public.matches_match_id_seq', 71, true);
 
 
 --
--- TOC entry 5135 (class 0 OID 0)
--- Dependencies: 225
+-- TOC entry 3565 (class 0 OID 0)
+-- Dependencies: 228
 -- Name: players_player_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.players_player_id_seq', 12, true);
+SELECT pg_catalog.setval('public.players_player_id_seq', 14, true);
 
 
 --
--- TOC entry 5136 (class 0 OID 0)
--- Dependencies: 221
+-- TOC entry 3566 (class 0 OID 0)
+-- Dependencies: 231
 -- Name: seasons_season_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.seasons_season_id_seq', 15, true);
+SELECT pg_catalog.setval('public.seasons_season_id_seq', 17, true);
 
 
 --
--- TOC entry 5137 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 3567 (class 0 OID 0)
+-- Dependencies: 232
 -- Name: seasons_team_entry_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.seasons_team_entry_id_seq', 5, true);
+SELECT pg_catalog.setval('public.seasons_team_entry_id_seq', 19, true);
 
 
 --
--- TOC entry 5138 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 3568 (class 0 OID 0)
+-- Dependencies: 234
 -- Name: team_stats_stats_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -804,16 +861,16 @@ SELECT pg_catalog.setval('public.team_stats_stats_id_seq', 4, true);
 
 
 --
--- TOC entry 5139 (class 0 OID 0)
--- Dependencies: 223
+-- TOC entry 3569 (class 0 OID 0)
+-- Dependencies: 236
 -- Name: teams_team_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.teams_team_id_seq', 15, true);
+SELECT pg_catalog.setval('public.teams_team_id_seq', 26, true);
 
 
 --
--- TOC entry 4918 (class 2606 OID 16421)
+-- TOC entry 3348 (class 2606 OID 16505)
 -- Name: championships championships_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -822,7 +879,7 @@ ALTER TABLE ONLY public.championships
 
 
 --
--- TOC entry 4928 (class 2606 OID 16512)
+-- TOC entry 3350 (class 2606 OID 16507)
 -- Name: contracts contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -831,7 +888,7 @@ ALTER TABLE ONLY public.contracts
 
 
 --
--- TOC entry 4932 (class 2606 OID 16578)
+-- TOC entry 3352 (class 2606 OID 16509)
 -- Name: match_events match_events_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -840,7 +897,7 @@ ALTER TABLE ONLY public.match_events
 
 
 --
--- TOC entry 4930 (class 2606 OID 16544)
+-- TOC entry 3354 (class 2606 OID 16511)
 -- Name: matches matches_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -849,7 +906,7 @@ ALTER TABLE ONLY public.matches
 
 
 --
--- TOC entry 4924 (class 2606 OID 16481)
+-- TOC entry 3356 (class 2606 OID 16513)
 -- Name: players players_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -858,7 +915,7 @@ ALTER TABLE ONLY public.players
 
 
 --
--- TOC entry 4920 (class 2606 OID 16449)
+-- TOC entry 3360 (class 2606 OID 16515)
 -- Name: seasons seasons_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -867,7 +924,7 @@ ALTER TABLE ONLY public.seasons
 
 
 --
--- TOC entry 4926 (class 2606 OID 16491)
+-- TOC entry 3358 (class 2606 OID 16517)
 -- Name: season_teams seasons_team_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -876,7 +933,7 @@ ALTER TABLE ONLY public.season_teams
 
 
 --
--- TOC entry 4934 (class 2606 OID 16609)
+-- TOC entry 3362 (class 2606 OID 16519)
 -- Name: team_stats team_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -885,7 +942,7 @@ ALTER TABLE ONLY public.team_stats
 
 
 --
--- TOC entry 4922 (class 2606 OID 16467)
+-- TOC entry 3364 (class 2606 OID 16521)
 -- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -894,7 +951,7 @@ ALTER TABLE ONLY public.teams
 
 
 --
--- TOC entry 4949 (class 2620 OID 16625)
+-- TOC entry 3379 (class 2620 OID 16522)
 -- Name: matches trg_check_match_date; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -902,7 +959,7 @@ CREATE TRIGGER trg_check_match_date BEFORE INSERT OR UPDATE ON public.matches FO
 
 
 --
--- TOC entry 4948 (class 2620 OID 16629)
+-- TOC entry 3381 (class 2620 OID 16523)
 -- Name: season_teams trg_check_team_limit; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -910,7 +967,7 @@ CREATE TRIGGER trg_check_team_limit BEFORE INSERT ON public.season_teams FOR EAC
 
 
 --
--- TOC entry 4951 (class 2620 OID 16633)
+-- TOC entry 3378 (class 2620 OID 16524)
 -- Name: match_events trg_player_event_after_dismissal; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -918,7 +975,7 @@ CREATE TRIGGER trg_player_event_after_dismissal BEFORE INSERT OR UPDATE ON publi
 
 
 --
--- TOC entry 4950 (class 2620 OID 16631)
+-- TOC entry 3380 (class 2620 OID 16525)
 -- Name: matches trg_team_tour_limit; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -926,7 +983,7 @@ CREATE TRIGGER trg_team_tour_limit BEFORE INSERT OR UPDATE ON public.matches FOR
 
 
 --
--- TOC entry 4938 (class 2606 OID 16518)
+-- TOC entry 3365 (class 2606 OID 16526)
 -- Name: contracts contracts_player_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -935,7 +992,7 @@ ALTER TABLE ONLY public.contracts
 
 
 --
--- TOC entry 4939 (class 2606 OID 16513)
+-- TOC entry 3366 (class 2606 OID 16531)
 -- Name: contracts contracts_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -944,7 +1001,7 @@ ALTER TABLE ONLY public.contracts
 
 
 --
--- TOC entry 4943 (class 2606 OID 16589)
+-- TOC entry 3367 (class 2606 OID 16536)
 -- Name: match_events match_events_assist_player_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -953,7 +1010,7 @@ ALTER TABLE ONLY public.match_events
 
 
 --
--- TOC entry 4944 (class 2606 OID 16579)
+-- TOC entry 3368 (class 2606 OID 16541)
 -- Name: match_events match_events_match_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -962,7 +1019,7 @@ ALTER TABLE ONLY public.match_events
 
 
 --
--- TOC entry 4945 (class 2606 OID 16584)
+-- TOC entry 3369 (class 2606 OID 16546)
 -- Name: match_events match_events_player_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -971,7 +1028,7 @@ ALTER TABLE ONLY public.match_events
 
 
 --
--- TOC entry 4940 (class 2606 OID 16555)
+-- TOC entry 3370 (class 2606 OID 16551)
 -- Name: matches matches_away_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -980,7 +1037,7 @@ ALTER TABLE ONLY public.matches
 
 
 --
--- TOC entry 4941 (class 2606 OID 16550)
+-- TOC entry 3371 (class 2606 OID 16556)
 -- Name: matches matches_home_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -989,7 +1046,7 @@ ALTER TABLE ONLY public.matches
 
 
 --
--- TOC entry 4942 (class 2606 OID 16545)
+-- TOC entry 3372 (class 2606 OID 16561)
 -- Name: matches matches_season_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -998,7 +1055,7 @@ ALTER TABLE ONLY public.matches
 
 
 --
--- TOC entry 4935 (class 2606 OID 16450)
+-- TOC entry 3375 (class 2606 OID 16566)
 -- Name: seasons seasons_championship_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1007,7 +1064,7 @@ ALTER TABLE ONLY public.seasons
 
 
 --
--- TOC entry 4936 (class 2606 OID 16492)
+-- TOC entry 3373 (class 2606 OID 16571)
 -- Name: season_teams seasons_team_season_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1016,7 +1073,7 @@ ALTER TABLE ONLY public.season_teams
 
 
 --
--- TOC entry 4937 (class 2606 OID 16497)
+-- TOC entry 3374 (class 2606 OID 16576)
 -- Name: season_teams seasons_team_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1025,7 +1082,7 @@ ALTER TABLE ONLY public.season_teams
 
 
 --
--- TOC entry 4946 (class 2606 OID 16610)
+-- TOC entry 3376 (class 2606 OID 16581)
 -- Name: team_stats team_stats_match_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1034,7 +1091,7 @@ ALTER TABLE ONLY public.team_stats
 
 
 --
--- TOC entry 4947 (class 2606 OID 16615)
+-- TOC entry 3377 (class 2606 OID 16586)
 -- Name: team_stats team_stats_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1042,11 +1099,11 @@ ALTER TABLE ONLY public.team_stats
     ADD CONSTRAINT team_stats_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(team_id) ON DELETE CASCADE;
 
 
--- Completed on 2026-04-03 12:09:30
+-- Completed on 2026-04-22 18:55:51 UTC
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict tSJ0uxgESv8gDrVtkAlAttf00fjoUsaS5MHKwvvH9GPOyfqk51BPEJF36L01JHT
+\unrestrict duw9KKEvqCE4IebvEudnDEOe9ptjxmgUIBLL1myN1UWPjeTl2aHsdxmeAPVMax5
 

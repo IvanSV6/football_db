@@ -75,7 +75,7 @@ TABLE_CONFIG = {
              "relation": {"table": "matches", "id_col": "match_id", "name_col": "match_date"}},
             {"column": "player_id", "label": "Автор", "type": "combo",
              "relation": {"table": "players", "id_col": "player_id", "name_col": "full_name"}},
-            {"column": "assist_player_id", "label": "Ассистент", "type": "combo", "required": False,
+            {"column": "assist_player_id", "label": "Ассистент", "type": "combo", "requireфd": False,
              "relation": {"table": "players", "id_col": "player_id", "name_col": "full_name"}},
             {"column": "event_type", "label": "Тип (Гол/Карточка)", "type": "text", "required": True},
             {"column": "minute", "label": "Минута", "type": "number", "required": True}

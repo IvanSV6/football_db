@@ -1,4 +1,4 @@
-from database.queries import get_all_table, insert_record, delete_record, update_record, get_one
+from database.queries import get_all_table, insert_record, delete_record, update_record, get_one, get_tournament_table, get_team_form
 from config import TABLE_CONFIG
 
 class DataManager:
@@ -24,5 +24,11 @@ class DataManager:
 
     def add_record(self, table_name, data):
         return insert_record(table_name, data)
+
+    def get_tournament_data(self, season_id):
+        return get_tournament_table(season_id)
+
+    def get_team_dynamics(self, team_id, season_id):
+        return get_team_form(team_id, season_id)
 
 data_manager = DataManager()
