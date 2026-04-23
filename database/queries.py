@@ -210,3 +210,43 @@ def get_team_form(team_id, season_id):
     finally:
         db.close_connection()
 
+def get_matches(season_id, round_number=None, team_id=None):
+    conn = db.get_connection()
+    if not conn:
+        return []
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            query = """
+                    SELECT 
+                        m.match_id,
+                        m.match_date,
+                        m.home_score,
+                        m.away_score,
+                        m.status,
+                        m.tour,
+                        t1.name as home_team,
+                        t2.name as away_team
+                    FROM matches m
+                    JOIN teams t1 ON m.home_team_id = t1.team_id
+                    JOIN teams t2 ON m.away_team_id = t2.team_id
+                    
+                    WHERE m.season_id = %s
+                """
+            params = [season_id]
+            if round_number and round_number != "Все туры":
+                query += " AND m.tour = %s"
+                params.append(round_number)
+
+            if team_id and team_id != "Все клубы":
+                query += " AND (m.home_team_id = %s OR m.away_team_id = %s)"
+                params.extend([team_id, team_id])
+
+            query += " ORDER BY m.match_date ASC;"
+            cursor.execute(query, tuple(params))
+            return cursor.fetchall()
+
+    except Exception as e:
+        print(f"Ошибка при получении списка матчей: {e}")
+        return []
+    finally:
+        db.close_connection()

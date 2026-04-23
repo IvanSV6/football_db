@@ -68,7 +68,6 @@ class TournamentTable(QWidget):
         filtered = [s for s in all_seasons if s['championship_id'] == champ_id]
 
         for s in filtered:
-            print("Вот",s)
             label = f"{str(s['start_date'])[:4]} - {str(s['end_date'])[:4]}"
             self.season_box.addItem(label, userData=s['season_id'])
 
