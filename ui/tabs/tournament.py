@@ -62,14 +62,11 @@ class TournamentTable(QWidget):
     def load_seasons(self):
         self.season_box.clear()
         champ_id = self.champ_box.currentData()
-        if champ_id is None: return
-
-        all_seasons = data_manager.get_all("seasons")
-        filtered = [s for s in all_seasons if s['championship_id'] == champ_id]
-
-        for s in filtered:
+        seasons = data_manager.get_seasons(champ_id)
+        for s in seasons:
             label = f"{str(s['start_date'])[:4]} - {str(s['end_date'])[:4]}"
-            self.season_box.addItem(label, userData=s['season_id'])
+            self.season_box.addItem(label, s['season_id'])
+        self.refresh_table()
 
     def refresh_table(self):
         season_id = self.season_box.currentData()
@@ -96,7 +93,6 @@ class TournamentTable(QWidget):
 
             form_res = data_manager.get_team_dynamics(row['team_id'], season_id)
             form_list = [f['res'] for f in form_res]
-            print(form_list)
             self.table.setCellWidget(i, 8, self.create_form_widget(form_list))
 
     def create_form_widget(self, form_data):

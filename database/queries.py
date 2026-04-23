@@ -29,10 +29,10 @@ def get_all_table(table):
         with conn.cursor(cursor_factory=RealDictCursor) as cursor:
             if table == "seasons":
                 query = """
-                                SELECT s.*, c.name || ' (' || s.start_date || ')' as season_label
-                                FROM seasons s
-                                JOIN championships c ON s.championship_id = c.championship_id;
-                            """
+                    SELECT s.*, c.name || ' (' || s.start_date || ')' as season_label
+                    FROM seasons s
+                    JOIN championships c ON s.championship_id = c.championship_id
+                """
             else:
                 query = f"SELECT * FROM {table};"
 
@@ -41,9 +41,8 @@ def get_all_table(table):
             return result
 
     except Exception as e:
-        print(f"Ошибка при получении данных из таблицы: {e}")
+        print(f"Ошибка при получении данных из таблицы {table}: {e}")
         return []
-
     finally:
         db.close_connection()
 
@@ -201,7 +200,6 @@ def get_team_form(team_id, season_id):
             """
             cursor.execute(query, (team_id, team_id, season_id, team_id, team_id))
             result = cursor.fetchall()
-            print(result)
             return result
 
     except Exception as e:
@@ -225,7 +223,9 @@ def get_matches(season_id, round_number=None, team_id=None):
                         m.status,
                         m.tour,
                         t1.name as home_team,
-                        t2.name as away_team
+                        t2.name as away_team,
+                        t1.city as city,
+                        t1.stadium as stadium
                     FROM matches m
                     JOIN teams t1 ON m.home_team_id = t1.team_id
                     JOIN teams t2 ON m.away_team_id = t2.team_id
@@ -241,12 +241,61 @@ def get_matches(season_id, round_number=None, team_id=None):
                 query += " AND (m.home_team_id = %s OR m.away_team_id = %s)"
                 params.extend([team_id, team_id])
 
-            query += " ORDER BY m.match_date ASC;"
+            query += " ORDER BY m.match_date DESC;"
             cursor.execute(query, tuple(params))
             return cursor.fetchall()
 
     except Exception as e:
         print(f"Ошибка при получении списка матчей: {e}")
+        return []
+    finally:
+        db.close_connection()
+
+def get_seasons_by_championship(championship_id):
+    conn = db.get_connection()
+    if not conn: return []
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            query = "SELECT * FROM seasons WHERE championship_id = %s ORDER BY start_date DESC;"
+            cursor.execute(query, (championship_id,))
+            return cursor.fetchall()
+    except Exception as e:
+        print(f"Ошибка при получении списка сезонов: {e}")
+        return []
+    finally:
+        db.close_connection()
+
+def get_teams_by_championship(championship_id):
+    conn = db.get_connection()
+    if not conn: return []
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            query = """
+                SELECT DISTINCT t.team_id, t.name 
+                FROM teams t
+                JOIN season_teams ts ON t.team_id = ts.team_id
+                JOIN seasons s ON ts.season_id = s.season_id
+                WHERE s.championship_id = %s
+                ORDER BY t.name;
+            """
+            cursor.execute(query, (championship_id,))
+            return cursor.fetchall()
+    except Exception as e:
+        print(f"Ошибка при получении списка команд: {e}")
+        return []
+    finally:
+        db.close_connection()
+
+def get_existing_rounds(season_id):
+    conn = db.get_connection()
+    if not conn: return []
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            query = "SELECT DISTINCT tour FROM matches WHERE season_id = %s ORDER BY tour;"
+            cursor.execute(query, (season_id,))
+            return [r['tour'] for r in cursor.fetchall()]
+    except Exception as e:
+        print(f"Ошибка при получении списка туров: {e}")
         return []
     finally:
         db.close_connection()

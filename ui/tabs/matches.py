@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
 from PyQt6.QtCore import Qt
 import locale
 from controllers.data_manager import data_manager
-locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
+locale.setlocale(locale.LC_TIME, 'russian')
 
 
 class MatchesTab(QWidget):
@@ -19,9 +19,13 @@ class MatchesTab(QWidget):
         main_layout.setSpacing(15)
         f_layout = QHBoxLayout()
         self.championships_box = QComboBox()
+        self.championships_box.setFixedWidth(150)
         self.season_box = QComboBox()
+        self.season_box.setFixedWidth(150)
         self.round_box = QComboBox()
+        self.round_box.setFixedWidth(150)
         self.team_box = QComboBox()
+        self.team_box.setFixedWidth(150)
         reset_btn = QPushButton("СБРОСИТЬ ФИЛЬТРЫ")
         reset_btn.setFlat(True)
         reset_btn.setStyleSheet("color: #0000FF; font-weight: bold; font-size: 11px;")
@@ -49,31 +53,56 @@ class MatchesTab(QWidget):
         self.scroll.setWidget(self.container)
         main_layout.addWidget(self.scroll)
 
-        self.championships_box.currentIndexChanged.connect(self.refresh_matches)
-        self.season_box.currentIndexChanged.connect(self.refresh_matches)
+        self.championships_box.currentIndexChanged.connect(self.on_championship_changed)
+        self.season_box.currentIndexChanged.connect(self.on_season_changed)
         self.round_box.currentIndexChanged.connect(self.refresh_matches)
         self.team_box.currentIndexChanged.connect(self.refresh_matches)
+
         reset_btn.clicked.connect(self.reset_filters)
 
     def load_filters(self):
+        self.championships_box.blockSignals(True)
+        self.championships_box.clear()
         championships = data_manager.get_all("championships")
-        for s in championships:
-            self.championships_box.addItem(s.get('name'), userData=s.get('championship_id'))
+        for c in championships:
+            self.championships_box.addItem(c.get('name'), c.get('championship_id'))
+        self.championships_box.blockSignals(False)
+        self.on_championship_changed()
 
+    def on_championship_changed(self):
         champ_id = self.championships_box.currentData()
-        seasons = data_manager.get_all("seasons")
-        filtered_seasons = [s for s in seasons if s['championship_id'] == champ_id]
-        for s in filtered_seasons:
-            self.season_box.addItem(s.get('season_label', str(s['start_date'])), s['season_id'])
+
+        for box in [self.season_box, self.team_box, self.round_box]:
+            box.clear()
+        self.season_box.blockSignals(True)
+        self.team_box.blockSignals(True)
+
+        self.season_box.clear()
+        self.team_box.clear()
+        seasons = data_manager.get_seasons(champ_id)
+        for s in seasons:
+            label = f"{str(s['start_date'])[:4]} - {str(s['end_date'])[:4]}"
+            self.season_box.addItem(label, s['season_id'])
 
         self.team_box.addItem("Все клубы", None)
-        teams = data_manager.get_all("teams")
+        teams = data_manager.get_teams(champ_id)
         for t in sorted(teams, key=lambda x: x['name']):
             self.team_box.addItem(t['name'], t['team_id'])
+        self.season_box.blockSignals(False)
+        self.team_box.blockSignals(False)
+        self.on_season_changed()
 
-        self.round_box.addItem("Все туры")
-        for r in range(1, 31):
-            self.round_box.addItem(f"Тур {r}")
+    def on_season_changed(self):
+        season_id = self.season_box.currentData()
+        if not season_id: return
+        self.round_box.blockSignals(True)
+        self.round_box.clear()
+        self.round_box.addItem("Все туры", None)
+        existing_rounds = data_manager.get_tours(season_id)
+        for r in existing_rounds:
+            self.round_box.addItem(f"Тур {r}", r)
+        self.round_box.blockSignals(False)
+        self.refresh_matches()
 
     def reset_filters(self):
         self.season_box.setCurrentIndex(0)
@@ -82,8 +111,17 @@ class MatchesTab(QWidget):
         self.refresh_matches()
 
     def refresh_matches(self):
+        while self.m_layout.count():
+            item = self.m_layout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.deleteLater()
+
         season_id = self.season_box.currentData()
-        round_val = self.round_box.currentText()
+        if season_id is None:
+
+            return
+        round_val = self.round_box.currentData()
         team_id = self.team_box.currentData()
 
         if not season_id: return
@@ -130,7 +168,7 @@ class MatchCardWidget(QFrame):
         layout.setContentsMargins(10, 5, 10, 5)
 
         info_layout = QVBoxLayout()
-        round_lbl = QLabel(f"Тур {self.match_data.get('round', '')}")
+        round_lbl = QLabel(f"Тур {self.match_data.get('tour', '')}")
         round_lbl.setStyleSheet("color: #757575; font-size: 11px;")
         round_lbl.setFixedWidth(120)
 
