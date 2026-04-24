@@ -265,7 +265,7 @@ def get_seasons_by_championship(championship_id):
     finally:
         db.close_connection()
 
-def get_teams_by_championship(championship_id):
+def get_teams_by_seasons(season_id):
     conn = db.get_connection()
     if not conn: return []
     try:
@@ -275,10 +275,10 @@ def get_teams_by_championship(championship_id):
                 FROM teams t
                 JOIN season_teams ts ON t.team_id = ts.team_id
                 JOIN seasons s ON ts.season_id = s.season_id
-                WHERE s.championship_id = %s
+                WHERE ts.season_id = %s
                 ORDER BY t.name;
             """
-            cursor.execute(query, (championship_id,))
+            cursor.execute(query, (season_id,))
             return cursor.fetchall()
     except Exception as e:
         print(f"Ошибка при получении списка команд: {e}")
@@ -296,6 +296,29 @@ def get_existing_rounds(season_id):
             return [r['tour'] for r in cursor.fetchall()]
     except Exception as e:
         print(f"Ошибка при получении списка туров: {e}")
+        return []
+    finally:
+        db.close_connection()
+
+def get_available_teams_for_season(season_id):
+    conn = db.get_connection()
+    if not conn: return []
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            query = """
+                SELECT team_id, name 
+                FROM teams 
+                WHERE team_id NOT IN (
+                    SELECT team_id 
+                    FROM season_teams 
+                    WHERE season_id = %s
+                )
+                ORDER BY name;
+            """
+            cursor.execute(query, (season_id,))
+            return cursor.fetchall()
+    except Exception as e:
+        print(f"Ошибка при поиске свободных команд: {e}")
         return []
     finally:
         db.close_connection()

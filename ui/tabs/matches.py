@@ -76,18 +76,13 @@ class MatchesTab(QWidget):
             box.clear()
         self.season_box.blockSignals(True)
         self.team_box.blockSignals(True)
-
         self.season_box.clear()
-        self.team_box.clear()
         seasons = data_manager.get_seasons(champ_id)
         for s in seasons:
             label = f"{str(s['start_date'])[:4]} - {str(s['end_date'])[:4]}"
             self.season_box.addItem(label, s['season_id'])
 
-        self.team_box.addItem("Все клубы", None)
-        teams = data_manager.get_teams(champ_id)
-        for t in sorted(teams, key=lambda x: x['name']):
-            self.team_box.addItem(t['name'], t['team_id'])
+
         self.season_box.blockSignals(False)
         self.team_box.blockSignals(False)
         self.on_season_changed()
@@ -96,11 +91,19 @@ class MatchesTab(QWidget):
         season_id = self.season_box.currentData()
         if not season_id: return
         self.round_box.blockSignals(True)
+        self.team_box.blockSignals(True)
         self.round_box.clear()
+        self.team_box.clear()
         self.round_box.addItem("Все туры", None)
         existing_rounds = data_manager.get_tours(season_id)
         for r in existing_rounds:
             self.round_box.addItem(f"Тур {r}", r)
+
+        self.team_box.addItem("Все клубы", None)
+        teams = data_manager.get_teams(season_id)
+        for t in sorted(teams, key=lambda x: x['name']):
+            self.team_box.addItem(t['name'], t['team_id'])
+        self.team_box.blockSignals(False)
         self.round_box.blockSignals(False)
         self.refresh_matches()
 

@@ -27,16 +27,40 @@ class UniversalDialog(QDialog):
                 continue
 
             col_name = field["column"]
-            f_type = field["type"]
-
             widget = self.create_widget(field)
-
-            if self.current_data and col_name in self.current_data:
-                value = self.current_data[col_name]
-                self.set_widget_value(widget, f_type, value)
 
             form.addRow(field["label"] + ":", widget)
             self.inputs[col_name] = widget
+
+        if "season_id" in self.inputs and "home_team_id" in self.inputs and "away_team_id" in self.inputs:
+            self.inputs["season_id"].currentIndexChanged.connect(self.update_teams_combos)
+
+        if self.current_data:
+            if "season_id" in self.inputs and "season_id" in self.current_data:
+                self.set_widget_value(self.inputs["season_id"], "combo", self.current_data["season_id"])
+
+            for field in self.config["fields"]:
+                col_name = field["column"]
+                if field["type"] == "hidden" or col_name == "season_id":
+                    continue
+                if col_name in self.current_data:
+                    self.set_widget_value(self.inputs[col_name], field["type"], self.current_data[col_name])
+        else:
+            if all(k in self.inputs for k in ["season_id", "home_team_id", "away_team_id"]):
+                self.inputs["season_id"].currentIndexChanged.connect(self.update_teams_combos)
+
+            if self.current_data:
+                if "season_id" in self.inputs and "season_id" in self.current_data:
+                    self.set_widget_value(self.inputs["season_id"], "combo", self.current_data["season_id"])
+
+                for field in self.config["fields"]:
+                    col_name = field["column"]
+                    if field["type"] == "hidden" or col_name == "season_id": continue
+                    if col_name in self.current_data:
+                        self.set_widget_value(self.inputs[col_name], field["type"], self.current_data[col_name])
+            else:
+                if all(k in self.inputs for k in ["season_id", "home_team_id", "away_team_id"]):
+                    self.update_teams_combos()
 
         layout.addLayout(form)
 
@@ -166,8 +190,36 @@ class UniversalDialog(QDialog):
                             f"Сезон длится с {s_start} по {s_end}"
                         )
                         return False
-
         return True
+
+    def update_teams_combos(self):
+        season_box = self.inputs.get("season_id")
+        home_combo = self.inputs.get("home_team_id")
+        away_combo = self.inputs.get("away_team_id")
+
+        if not (home_combo and away_combo):
+            return
+
+        season_id = season_box.currentData()
+
+        cur_home = home_combo.currentData()
+        cur_away = away_combo.currentData()
+
+        for cb in [home_combo, away_combo]:
+            cb.blockSignals(True)
+            cb.clear()
+
+        if season_id:
+            teams = data_manager.get_teams(season_id)
+            for t in sorted(teams, key=lambda x: x.get('name', '')):
+                home_combo.addItem(t['name'], t['team_id'])
+                away_combo.addItem(t['name'], t['team_id'])
+
+        self.set_widget_value(home_combo, "combo", cur_home)
+        self.set_widget_value(away_combo, "combo", cur_away)
+
+        home_combo.blockSignals(False)
+        away_combo.blockSignals(False)
 
     def accept(self):
         collected_data = self.get_data()

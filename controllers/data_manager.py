@@ -1,6 +1,6 @@
 from database.queries import (get_all_table, insert_record, delete_record, update_record,
-                              get_one, get_tournament_table, get_team_form, get_matches, get_teams_by_championship,
-                              get_seasons_by_championship, get_existing_rounds)
+                              get_one, get_tournament_table, get_team_form, get_matches, get_teams_by_seasons,
+                              get_seasons_by_championship, get_existing_rounds, get_available_teams_for_season)
 from config import TABLE_CONFIG
 
 class DataManager:
@@ -40,9 +40,12 @@ class DataManager:
         return get_seasons_by_championship(championship_id)
 
     def get_teams(self,championship_id):
-        return get_teams_by_championship(championship_id)
+        return get_teams_by_seasons(championship_id)
 
     def get_tours(self, season_id):
         return get_existing_rounds(season_id)
+
+    def get_teams_for_season(self, season_id):
+        return get_available_teams_for_season(season_id)
 
 data_manager = DataManager()

@@ -2,6 +2,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMainWindow, QTabWidget, QWidget, QVBoxLayout, QPushButton, QDialog
 from ui.tabs.tournament import TournamentTable
 from ui.tabs.matches import MatchesTab
+from ui.tabs.teams import TeamsTab
 from config import TABLE_CONFIG
 from ui.tabs.base_tab import GenericTableTab
 from controllers.session import session
@@ -51,6 +52,8 @@ class MainWindow(QMainWindow):
         elif session.current_role == "user":
             self.tournament_tab = TournamentTable()
             self.matches_tab = MatchesTab()
+            self.teams_tab = TeamsTab()
             self.tabs.addTab(self.tournament_tab, "Турнирная таблица")
             self.tabs.addTab(self.matches_tab, "Календарь матчей")
+            self.tabs.addTab(self.teams_tab, "Клубы")
 
