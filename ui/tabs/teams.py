@@ -1,8 +1,9 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                              QFrame, QScrollArea, QComboBox, QPushButton, QGridLayout)
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPixmap
 from controllers.data_manager import data_manager
-
+import os
 
 class TeamsTab(QWidget):
     def __init__(self):
@@ -136,7 +137,6 @@ class TeamCardWidget(QFrame):
                 border: 1px solid #b0b0b0;
                 background-color: #fafafa;
             }
-            QLabel { border: none; }
         """)
 
         main_layout = QVBoxLayout(self)
@@ -145,10 +145,29 @@ class TeamCardWidget(QFrame):
         top_layout = QHBoxLayout()
 
         self.logo_lbl = QLabel()
-        self.logo_lbl.setFixedSize(40, 40)
-        self.logo_lbl.setStyleSheet("background-color: #f0f0f0; border-radius: 20px;")
+        self.logo_lbl.setFixedSize(50, 50)
+        self.logo_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        name_lbl = QLabel(self.team_data.get('name', ''))
+        logo_path = self.team_data.get('logo_path')
+        full_path = os.path.join("assets", "teams", str(logo_path)) if logo_path else ""
+        if logo_path and os.path.exists(full_path):
+            pixmap = QPixmap(full_path)
+            scaled_pixmap = pixmap.scaled(
+                self.logo_lbl.size(),
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation
+            )
+            self.logo_lbl.setPixmap(scaled_pixmap)
+        else:
+            self.logo_lbl.setStyleSheet("""
+                background-color: #f0f0f0; 
+                border-radius: 25px; 
+                color: #ccc; 
+                font-size: 8px;
+            """)
+            self.logo_lbl.setText("")
+
+        name_lbl = QLabel(self.team_data.get('name', 'Команда'))
         name_lbl.setStyleSheet("font-size: 15px; font-weight: bold; color: #000040;")
         name_lbl.setWordWrap(True)
 
@@ -158,12 +177,9 @@ class TeamCardWidget(QFrame):
         top_layout.addStretch()
 
         city_layout = QVBoxLayout()
-        city_layout.setSpacing(2)
-
         gorod_hint_lbl = QLabel("ГОРОД")
         gorod_hint_lbl.setStyleSheet("font-size: 9px; color: #999; font-weight: bold;")
-
-        city_name_lbl = QLabel(self.team_data.get('city', ''))
+        city_name_lbl = QLabel(self.team_data.get('city', 'Неизвестно'))
         city_name_lbl.setStyleSheet("font-size: 12px; font-weight: bold; color: #222;")
 
         city_layout.addWidget(gorod_hint_lbl)

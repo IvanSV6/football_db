@@ -48,4 +48,18 @@ class DataManager:
     def get_teams_for_season(self, season_id):
         return get_available_teams_for_season(season_id)
 
+    def save_logo(self, source_path):
+        if not source_path or not os.path.exists(source_path):
+            return None
+        target_dir = os.path.join("assets", "teams")
+        os.makedirs(target_dir, exist_ok=True)
+        file_name = os.path.basename(source_path)
+        destination = os.path.join(target_dir, file_name)
+        try:
+            shutil.copy2(source_path, destination)
+            return file_name
+        except Exception as e:
+            print(f"Ошибка сохранения файла: {e}")
+            return None
+
 data_manager = DataManager()

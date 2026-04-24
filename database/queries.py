@@ -271,7 +271,7 @@ def get_teams_by_seasons(season_id):
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cursor:
             query = """
-                SELECT DISTINCT t.team_id, t.name 
+                SELECT DISTINCT t.team_id, t.name, t.city, t.logo_path 
                 FROM teams t
                 JOIN season_teams ts ON t.team_id = ts.team_id
                 JOIN seasons s ON ts.season_id = s.season_id

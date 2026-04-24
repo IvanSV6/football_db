@@ -17,7 +17,8 @@ TABLE_CONFIG = {
             {"column": "name", "label": "Название", "type": "text", "required": True},
             {"column": "city", "label": "Город", "type": "text", "required": True},
             {"column": "founded_year", "label": "Год основания", "type": "number", "min": 1850, "max": 2026, "required": True},
-            {"column": "stadium", "label": "Стадион", "type": "text"}
+            {"column": "stadium", "label": "Стадион", "type": "text"},
+            {"column": "logo_path", "label": "Эмблема", "type": "file"}
         ]
     },
     "players": {

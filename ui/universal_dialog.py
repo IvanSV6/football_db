@@ -1,6 +1,8 @@
 import datetime
-from PyQt6.QtWidgets import (QDialog, QFormLayout, QLineEdit,
-                             QPushButton, QVBoxLayout, QCheckBox, QDateEdit, QComboBox, QMessageBox)
+import os
+import shutil
+from PyQt6.QtWidgets import (QDialog, QFormLayout, QLineEdit, QPushButton, QVBoxLayout, QCheckBox,
+                             QDateEdit, QComboBox, QMessageBox, QFileDialog, QWidget, QHBoxLayout)
 from PyQt6.QtCore import QDate
 from config import TABLE_CONFIG
 from controllers.data_manager import data_manager
@@ -21,19 +23,20 @@ class UniversalDialog(QDialog):
     def setup_ui(self):
         layout = QVBoxLayout(self)
         form = QFormLayout()
-
         for field in self.config["fields"]:
             if field["type"] == "hidden":
                 continue
 
             col_name = field["column"]
             widget = self.create_widget(field)
-
             form.addRow(field["label"] + ":", widget)
             self.inputs[col_name] = widget
 
-        if "season_id" in self.inputs and "home_team_id" in self.inputs and "away_team_id" in self.inputs:
-            self.inputs["season_id"].currentIndexChanged.connect(self.update_teams_combos)
+        season_box = self.inputs.get("season_id")
+        has_teams = any(k in self.inputs for k in ["home_team_id", "away_team_id", "team_id"])
+
+        if season_box and has_teams:
+            season_box.currentIndexChanged.connect(self.update_teams_combos)
 
         if self.current_data:
             if "season_id" in self.inputs and "season_id" in self.current_data:
@@ -46,21 +49,8 @@ class UniversalDialog(QDialog):
                 if col_name in self.current_data:
                     self.set_widget_value(self.inputs[col_name], field["type"], self.current_data[col_name])
         else:
-            if all(k in self.inputs for k in ["season_id", "home_team_id", "away_team_id"]):
-                self.inputs["season_id"].currentIndexChanged.connect(self.update_teams_combos)
-
-            if self.current_data:
-                if "season_id" in self.inputs and "season_id" in self.current_data:
-                    self.set_widget_value(self.inputs["season_id"], "combo", self.current_data["season_id"])
-
-                for field in self.config["fields"]:
-                    col_name = field["column"]
-                    if field["type"] == "hidden" or col_name == "season_id": continue
-                    if col_name in self.current_data:
-                        self.set_widget_value(self.inputs[col_name], field["type"], self.current_data[col_name])
-            else:
-                if all(k in self.inputs for k in ["season_id", "home_team_id", "away_team_id"]):
-                    self.update_teams_combos()
+            if has_teams:
+                self.update_teams_combos()
 
         layout.addLayout(form)
 
@@ -93,10 +83,37 @@ class UniversalDialog(QDialog):
                 widget.addItem(display_name, userData=record_id)
 
             return widget
+        elif f_type == "file":
+            container = QWidget()
+            layout = QHBoxLayout(container)
+            layout.setContentsMargins(0, 0, 0, 0)
 
+            line_edit = QLineEdit()
+            line_edit.setReadOnly(True)
+            line_edit.setPlaceholderText("Файл не выбран")
+
+            btn_browse = QPushButton("Обзор...")
+            btn_browse.clicked.connect(lambda: self._browse_file(line_edit))
+
+            layout.addWidget(line_edit)
+            layout.addWidget(btn_browse)
+            container.line_edit = line_edit
+            return container
 
         else:
             return QLineEdit()
+
+    def _browse_file(self, line_edit):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Выберите эмблему", "", "Images (*.png *.jpg *.jpeg *.webp)"
+        )
+        if file_path:
+            target_dir = os.path.join("assets", "logos")
+            os.makedirs(target_dir, exist_ok=True)
+            file_name = os.path.basename(file_path)
+            destination = os.path.join(target_dir, file_name)
+            shutil.copy2(file_path, destination)
+            line_edit.setText(file_name)
 
     def set_widget_value(self, widget, f_type, value):
         if value is None: return
@@ -113,21 +130,22 @@ class UniversalDialog(QDialog):
             index = widget.findData(value)
             if index >= 0:
                 widget.setCurrentIndex(index)
-
+        elif f_type == "file" and hasattr(widget, "line_edit"):
+            widget.line_edit.setText(str(value))
         else:
             widget.setText(str(value))
 
     def get_data(self):
         result = {}
         for col, widget in self.inputs.items():
-            if isinstance(widget, QCheckBox):
+            if hasattr(widget, "line_edit"):
+                result[col] = widget.line_edit.text().strip()
+            elif isinstance(widget, QCheckBox):
                 result[col] = widget.isChecked()
             elif isinstance(widget, QDateEdit):
                 result[col] = widget.date().toString("yyyy-MM-dd")
-
             elif isinstance(widget, QComboBox):
                 result[col] = widget.currentData()
-
             else:
                 result[col] = widget.text().strip()
         return result
