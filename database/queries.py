@@ -322,3 +322,118 @@ def get_available_teams_for_season(season_id):
         return []
     finally:
         db.close_connection()
+
+
+def get_players(championship_id=None, season_id=None, club_id=None, position=None, nationality=None, search_text=None):
+    conn = db.get_connection()
+    if not conn:
+        return []
+
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            conditions = []
+            params = []
+
+            # 1. Базовая выборка: используем LEFT JOIN, чтобы сохранить ВСЕХ игроков,
+            # COALESCE заменит NULL в названии клуба на 'Свободный агент'
+            query = """
+                SELECT DISTINCT
+                    p.player_id, p.full_name, p.birth_date, p.nationality, p.position, p.photo_path,
+                    t.team_id,
+                    COALESCE(t.name, 'Свободный агент') AS team_name,
+                    t.logo_path
+                FROM players p
+            """
+
+            # 2. Подтягиваем ТОЛЬКО актуальный контракт
+            if season_id:
+                # Если передан сезон, контракт должен действовать в рамках дат этого сезона
+                query += """
+                    LEFT JOIN contracts c ON p.player_id = c.player_id
+                        AND c.start_date <= (SELECT end_date FROM seasons WHERE season_id = %s)
+                        AND c.end_date >= (SELECT start_date FROM seasons WHERE season_id = %s)
+                """
+                params.extend([season_id, season_id])
+            else:
+                # Если сезон не передан, берем контракт, действующий на СЕГОДНЯШНИЙ день
+                query += """
+                    LEFT JOIN contracts c ON p.player_id = c.player_id
+                        AND CURRENT_DATE BETWEEN c.start_date AND c.end_date
+                """
+
+            # 3. Подтягиваем клуб (если контракта нет, t.team_id будет NULL)
+            query += " LEFT JOIN teams t ON c.team_id = t.team_id"
+
+            # 4. Жесткая фильтрация по чемпионату (только если он запрошен)
+            if championship_id:
+                if season_id:
+                    # Конкретный сезон (оставляем твою логику)
+                    query += """
+                        INNER JOIN season_teams st ON t.team_id = st.team_id
+                        INNER JOIN seasons s ON st.season_id = s.season_id
+                    """
+                    conditions.append("s.championship_id = %s")
+                    params.append(championship_id)
+
+                    conditions.append("s.season_id = %s")
+                    params.append(season_id)
+
+                else:
+                    # 🔥 ВСЯ ИСТОРИЯ чемпионата
+                    conditions.append("""
+                        EXISTS (
+                            SELECT 1
+                            FROM contracts c2
+                            JOIN season_teams st2 ON c2.team_id = st2.team_id
+                            JOIN seasons s2 ON st2.season_id = s2.season_id
+                            WHERE c2.player_id = p.player_id
+                              AND s2.championship_id = %s
+                        )
+                    """)
+                    params.append(championship_id)
+
+            # 5. Обычные фильтры
+            if search_text:
+                conditions.append("p.full_name ILIKE %s")
+                params.append(f"%{search_text}%")
+
+            if club_id:
+                conditions.append("t.team_id = %s")
+                params.append(club_id)
+
+            if position and position not in ("", "Все амплуа"):
+                conditions.append("p.position = %s")
+                params.append(position)
+
+            if nationality and nationality not in ("", "Все страны"):
+                conditions.append("p.nationality = %s")
+                params.append(nationality)
+
+            # 6. Финальная сборка WHERE
+            if conditions:
+                query += " WHERE " + " AND ".join(conditions)
+
+            query += " ORDER BY p.full_name;"
+
+            cursor.execute(query, tuple(params))
+            return cursor.fetchall()
+    except Exception as e:
+        print(f"Ошибка при поиске игроков: {e}")
+        return []
+    finally:
+        db.close_connection()
+
+def get_nationalities():
+    """Получает список стран, которые реально есть у игроков в базе"""
+    conn = db.get_connection()
+    if not conn: return []
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            query = "SELECT DISTINCT nationality FROM players WHERE nationality IS NOT NULL ORDER BY nationality;"
+            cursor.execute(query)
+            return [row['nationality'] for row in cursor.fetchall()]
+    except Exception as e:
+        print(f"Ошибка при получении списка стран: {e}")
+        return []
+    finally:
+        db.close_connection()

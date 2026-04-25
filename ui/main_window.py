@@ -1,5 +1,7 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMainWindow, QTabWidget, QWidget, QVBoxLayout, QPushButton, QDialog
+
+from ui.tabs.players import PlayersTab
 from ui.tabs.tournament import TournamentTable
 from ui.tabs.matches import MatchesTab
 from ui.tabs.teams import TeamsTab
@@ -53,7 +55,9 @@ class MainWindow(QMainWindow):
             self.tournament_tab = TournamentTable()
             self.matches_tab = MatchesTab()
             self.teams_tab = TeamsTab()
+            self.players_tab = PlayersTab()
             self.tabs.addTab(self.tournament_tab, "Турнирная таблица")
             self.tabs.addTab(self.matches_tab, "Календарь матчей")
             self.tabs.addTab(self.teams_tab, "Клубы")
+            self.tabs.addTab(self.players_tab,"Игроки")
 

@@ -1,7 +1,10 @@
 from database.queries import (get_all_table, insert_record, delete_record, update_record,
                               get_one, get_tournament_table, get_team_form, get_matches, get_teams_by_seasons,
-                              get_seasons_by_championship, get_existing_rounds, get_available_teams_for_season)
+                              get_seasons_by_championship, get_existing_rounds, get_available_teams_for_season,
+                              get_players, get_nationalities)
 from config import TABLE_CONFIG
+import os
+import shutil
 
 class DataManager:
     def get_all(self, table_name):
@@ -61,5 +64,9 @@ class DataManager:
         except Exception as e:
             print(f"Ошибка сохранения файла: {e}")
             return None
+    def get_filtered_players(self,championship_id=None, season_id=None, club_id=None, position=None, nationality=None, search_text=None):
+        return get_players(championship_id, season_id, club_id, position, nationality, search_text)
 
+    def get_national(self):
+        return get_nationalities()
 data_manager = DataManager()
