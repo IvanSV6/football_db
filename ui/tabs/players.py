@@ -172,15 +172,15 @@ class PlayersTab(QWidget):
 
             item_player = QTableWidgetItem(p.get('full_name', 'Неизвестно'))
             photo = p.get('photo')  # Или photo_path, в зависимости от твоей таблицы
-            if photo and os.path.exists(f"assets/photos/{photo}"):
-                item_player.setIcon(QIcon(f"assets/photos/{photo}"))
+            if photo and os.path.exists(f"assets/players/{photo}"):
+                item_player.setIcon(QIcon(f"assets/players/{photo}"))
             self.table.setItem(row, 0, item_player)
 
             team_name = p.get('team_name') or "Свободный агент"
             item_club = QTableWidgetItem(team_name)
             logo = p.get('logo_path')
-            if logo and os.path.exists(f"assets/logos/{logo}"):
-                item_club.setIcon(QIcon(f"assets/logos/{logo}"))
+            if logo and os.path.exists(f"assets/teams/{logo}"):
+                item_club.setIcon(QIcon(f"assets/teams/{logo}"))
             self.table.setItem(row, 1, item_club)
 
             self.table.setItem(row, 2, QTableWidgetItem(p.get('position', '-')))
