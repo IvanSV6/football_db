@@ -339,3 +339,41 @@ def get_stats(cursor, match_id):
     """
     cursor.execute(query, (match_id,))
     return cursor.fetchall()
+
+@db_op()
+def get_rankings(cursor, championship_id=None, season_id=None, event_type='Гол', is_assist=False):
+    join_col = "me.assist_player_id" if is_assist else "me.player_id"
+
+    query = f"""
+                    SELECT 
+                        p.full_name, 
+                        p.photo_path, 
+                        t.name as team_name,
+                        COUNT(me.event_id) as total
+                    FROM players p
+                    JOIN match_events me ON {join_col} = p.player_id
+                    JOIN matches m ON me.match_id = m.match_id
+                    LEFT JOIN contracts c ON p.player_id = c.player_id 
+                         AND m.match_date::date BETWEEN c.start_date AND COALESCE(c.end_date, '9999-12-31')
+                    LEFT JOIN teams t ON c.team_id = t.team_id
+                    WHERE me.event_type = %s
+                """
+
+    params = [event_type]
+    if is_assist:
+        query += " AND me.assist_player_id IS NOT NULL"
+
+    if season_id:
+        query += " AND m.season_id = %s"
+        params.append(season_id)
+    elif championship_id:
+        query += " AND m.season_id IN (SELECT season_id FROM seasons WHERE championship_id = %s)"
+        params.append(championship_id)
+
+    query += """
+                    GROUP BY p.player_id, p.full_name, p.photo_path, t.name
+                    ORDER BY total DESC, p.full_name ASC
+                    LIMIT 10
+                """
+    cursor.execute(query, tuple(params))
+    return cursor.fetchall()
