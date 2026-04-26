@@ -19,6 +19,7 @@ class RankingTab(QWidget):
 
         top_layout = QHBoxLayout()
         title_lbl = QLabel("Статистика игроков")
+
         title_lbl.setStyleSheet("font-size: 24px; font-weight: bold; color: #00bcd4;")
 
         self.combo_champ = QComboBox()
