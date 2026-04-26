@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-                             QFrame, QScrollArea, QComboBox, QPushButton)
+                             QFrame, QScrollArea, QComboBox, QPushButton, QGridLayout)
 from PyQt6.QtCore import Qt
 import locale
 from controllers.data_manager import data_manager
@@ -155,6 +155,7 @@ class MatchCardWidget(QFrame):
     def __init__(self, match_data):
         super().__init__()
         self.match_data = match_data
+        self.stats_loaded = False
         self.init_ui()
 
     def init_ui(self):
@@ -165,10 +166,15 @@ class MatchCardWidget(QFrame):
             }
             QLabel { border: none; }
         """)
-        self.setFixedHeight(60)
 
-        layout = QHBoxLayout(self)
-        layout.setContentsMargins(10, 5, 10, 5)
+        self.main_layout = QVBoxLayout(self)
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.setSpacing(0)
+
+        self.top_container = QWidget()
+        self.top_container.setMinimumHeight(60)
+        top_layout = QHBoxLayout(self.top_container)
+        top_layout.setContentsMargins(10, 5, 10, 5)
 
         info_layout = QVBoxLayout()
         round_lbl = QLabel(f"Тур {self.match_data.get('tour', '')}")
@@ -194,12 +200,7 @@ class MatchCardWidget(QFrame):
         score_lbl = QLabel(f"{self.match_data.get('home_score', 0)} - {self.match_data.get('away_score', 0)}")
         score_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         score_lbl.setFixedSize(50, 30)
-        score_lbl.setStyleSheet("""
-            background-color: #f5f5f5;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 14px;
-        """)
+        score_lbl.setStyleSheet("background-color: #f5f5f5; border-radius: 5px; font-weight: bold; font-size: 14px;")
 
         away_lbl = QLabel(self.match_data.get('away_team', ''))
         away_lbl.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
@@ -220,14 +221,111 @@ class MatchCardWidget(QFrame):
         loc_layout.addWidget(city_lbl)
         loc_layout.addWidget(stadium_lbl)
 
-        layout.addLayout(info_layout)
-        layout.addWidget(status_lbl)
-        layout.addStretch(1)
-        layout.addWidget(home_lbl)
-        layout.addWidget(score_lbl)
-        layout.addWidget(away_lbl)
-        layout.addStretch(1)
+        self.btn_stats = QPushButton("▼ Статистика")
+        self.btn_stats.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_stats.setFlat(True)
+        self.btn_stats.setStyleSheet("color: #1976D2; font-weight: bold; font-size: 11px; border: none;")
+        self.btn_stats.clicked.connect(self.toggle_stats)
 
-        layout.addLayout(loc_layout)
+        # Собираем верхний слой
+        top_layout.addLayout(info_layout)
+        top_layout.addWidget(status_lbl)
+        top_layout.addStretch(1)
+        top_layout.addWidget(home_lbl)
+        top_layout.addWidget(score_lbl)
+        top_layout.addWidget(away_lbl)
+        top_layout.addStretch(1)
+        top_layout.addLayout(loc_layout)
+        top_layout.addWidget(self.btn_stats)
 
+        self.main_layout.addWidget(self.top_container)
+
+        self.stats_container = QFrame()
+        self.stats_container.setStyleSheet("background-color: #fafafa; border-top: 1px solid #eeeeee;")
+        self.stats_layout = QVBoxLayout(self.stats_container)
+        self.stats_layout.setContentsMargins(40, 15, 40, 15)
+
+        self.stats_container.hide()
+        self.main_layout.addWidget(self.stats_container)
+
+    def toggle_stats(self):
+        if self.stats_container.isVisible():
+            self.stats_container.hide()
+            self.btn_stats.setText("▼ Статистика")
+        else:
+            if not self.stats_loaded:
+                self.build_stats_ui()
+            print("1")
+            self.stats_container.show()
+            self.btn_stats.setText("▲ Статистика")
+
+    def build_stats_ui(self):
+        match_id = self.match_data.get('match_id')
+        raw_stats = data_manager.get_match_stats(match_id)
+        if not raw_stats or len(raw_stats) < 2:
+            no_data_lbl = QLabel("Статистика для данного матча пока недоступна")
+            no_data_lbl.setStyleSheet("color: #757575; font-style: italic;")
+            no_data_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            self.stats_layout.addWidget(no_data_lbl)
+            self.stats_loaded = True
+            return
+        home_team_name = self.match_data.get('home_team')
+        away_team_name = self.match_data.get('away_team')
+
+        if raw_stats[0]['team_name'] == home_team_name:
+            stat_home = raw_stats[0]
+            stat_away = raw_stats[1]
+        else:
+            stat_home = raw_stats[1]
+            stat_away = raw_stats[0]
+
+        grid = QGridLayout()
+        grid.setVerticalSpacing(10)
+
+        h_name = QLabel(home_team_name)
+        h_name.setStyleSheet("font-weight: bold; font-size: 12px; color: #333;")
+        h_name.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        a_name = QLabel(away_team_name)
+        a_name.setStyleSheet("font-weight: bold; font-size: 12px; color: #333;")
+        a_name.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        grid.addWidget(h_name, 0, 0)
+        grid.addWidget(a_name, 0, 2)
+
+        stat_rows = [
+            ("Владение мячом (%)", 'possession'),
+            ("Удары", 'shots'),
+            ("Удары в створ", 'shots_on_target'),
+            ("Угловые", 'corners'),
+            ("Фолы", 'fouls'),
+            ("Офсайды", 'offsides')
+        ]
+
+        row_idx = 1
+        for label_text, db_key in stat_rows:
+            val_h = QLabel(str(stat_home.get(db_key, 0)))
+            val_h.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            val_h.setStyleSheet("font-size: 14px; font-weight: bold;")
+
+            lbl = QLabel(label_text)
+            lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            lbl.setStyleSheet("color: #757575; font-size: 12px;")
+
+            val_a = QLabel(str(stat_away.get(db_key, 0)))
+            val_a.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            val_a.setStyleSheet("font-size: 14px; font-weight: bold;")
+
+            grid.addWidget(val_h, row_idx, 0)
+            grid.addWidget(lbl, row_idx, 1)
+            grid.addWidget(val_a, row_idx, 2)
+
+            grid.setColumnStretch(0, 1)
+            grid.setColumnStretch(1, 2)
+            grid.setColumnStretch(2, 1)
+
+            row_idx += 1
+
+        self.stats_layout.addLayout(grid)
+        self.stats_loaded = True
 

@@ -1,22 +1,25 @@
-import os
-from dotenv import load_dotenv
+from database.queries import get_one
 
-load_dotenv()
 
 class SessionManager:
     def __init__(self):
-        self.current_role = "user"
+        self.current_role = "user"  # По умолчанию гость
+        self.user_data = None
 
-    def login(self, password):
-        if password == os.getenv("ADMIN_PASSWORD"):
-            self.current_role = "admin"
-            return True
-        elif password == os.getenv("MANAGER_PASSWORD"):
-            self.current_role = "manager"
-            return True
+    def login(self, login, password):
+        user = get_one("users", "login", login)
 
+        if user and user['password'] == password:
+            self.user_data = user
+            if user['access_level'] == 1:
+                self.current_role = "admin"
+            elif user['access_level'] == 2:
+                self.current_role = "manager"
+            return True
         return False
+
     def logout(self):
         self.current_role = "user"
+        self.user_data = None
 
 session = SessionManager()

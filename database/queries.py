@@ -437,3 +437,23 @@ def get_nationalities():
         return []
     finally:
         db.close_connection()
+
+def get_stats(match_id):
+    conn = db.get_connection()
+    if not conn: return []
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            query = """
+                        SELECT ms.*, t.name as team_name 
+                        FROM team_stats ms
+                        JOIN teams t ON ms.team_id = t.team_id
+                        WHERE ms.match_id = %s;
+                    """
+            cursor.execute(query, (match_id,))
+            return cursor.fetchall()
+    except Exception as e:
+        print(f"Ошибка при получении статистики: {e}")
+        return []
+    finally:
+        db.close_connection()
+
