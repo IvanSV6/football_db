@@ -58,7 +58,6 @@ class TeamsTab(QWidget):
         self.scroll.setWidget(self.container)
         main_layout.addWidget(self.scroll)
 
-        # --- СИГНАЛЫ ---
         self.championships_box.currentIndexChanged.connect(self.on_championship_changed)
         self.season_box.currentIndexChanged.connect(self.refresh_teams)
         reset_btn.clicked.connect(self.reset_filters)

@@ -1,7 +1,9 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                              QFrame, QScrollArea, QComboBox, QPushButton, QGridLayout)
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPixmap
 import locale
+import os
 from controllers.data_manager import data_manager
 locale.setlocale(locale.LC_TIME, 'russian')
 
@@ -202,6 +204,17 @@ class MatchCardWidget(QFrame):
         score_lbl.setFixedSize(50, 30)
         score_lbl.setStyleSheet("background-color: #f5f5f5; border-radius: 5px; font-weight: bold; font-size: 14px;")
 
+        self.home_logo = QLabel()
+        self.home_logo.setFixedSize(30, 30)
+        self.home_logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.away_logo = QLabel()
+        self.away_logo.setFixedSize(30, 30)
+        self.away_logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.set_logo(self.home_logo, self.match_data.get('home_logo'))
+        self.set_logo(self.away_logo, self.match_data.get('away_logo'))
+
         away_lbl = QLabel(self.match_data.get('away_team', ''))
         away_lbl.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         away_lbl.setStyleSheet("font-weight: bold; font-size: 14px;")
@@ -232,7 +245,9 @@ class MatchCardWidget(QFrame):
         top_layout.addWidget(status_lbl)
         top_layout.addStretch(1)
         top_layout.addWidget(home_lbl)
+        top_layout.addWidget(self.home_logo)
         top_layout.addWidget(score_lbl)
+        top_layout.addWidget(self.away_logo)
         top_layout.addWidget(away_lbl)
         top_layout.addStretch(1)
         top_layout.addLayout(loc_layout)
@@ -247,6 +262,23 @@ class MatchCardWidget(QFrame):
 
         self.stats_container.hide()
         self.main_layout.addWidget(self.stats_container)
+
+    def set_logo(self, label, logo_path):
+        full_path = os.path.join("assets", "teams", str(logo_path)) if logo_path else ""
+
+        if logo_path and os.path.exists(full_path):
+            pixmap = QPixmap(full_path)
+            scaled_pixmap = pixmap.scaled(
+                label.size(),
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation
+            )
+            label.setPixmap(scaled_pixmap)
+        else:
+            label.setStyleSheet("""
+                background-color: #f0f0f0; 
+                border-radius: 15px;
+            """)
 
     def toggle_stats(self):
         if self.stats_container.isVisible():
