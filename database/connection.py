@@ -7,7 +7,6 @@ class DatabaseConnection:
         if self.connection is None or self.connection.closed != 0:
             try:
                 self.connection = psycopg2.connect(host="localhost", port="5433", database="football_db", user="postgres", password="mysecretpassword")
-                print("Успешное подключение к базе данных")
                 return self.connection
             except Exception as error:
                 print(f"Ошибка подключения к базе данных {error}")
@@ -16,7 +15,6 @@ class DatabaseConnection:
     def close_connection(self):
         if self.connection is not None and self.connection.closed == 0:
             self.connection.close()
-            print("Соединение с БД закрыто")
 
 
 db = DatabaseConnection()
