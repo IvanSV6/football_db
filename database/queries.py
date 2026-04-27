@@ -152,6 +152,8 @@ def get_matches(cursor, season_id, round_number=None, team_id=None):
     query = """
         SELECT 
             m.match_id,
+            m.home_team_id,
+            m.away_team_id,
             m.match_date,
             m.home_score,
             m.away_score,
@@ -376,4 +378,46 @@ def get_rankings(cursor, championship_id=None, season_id=None, event_type='Го�
                     LIMIT 10
                 """
     cursor.execute(query, tuple(params))
+    return cursor.fetchall()
+
+@db_op(commit=True)
+def add_match_event(cursor, data):
+    query = """
+        INSERT INTO match_events (match_id, player_id, assist_player_id, event_type, minute)
+        VALUES (%s, %s, %s, %s, %s)
+    """
+    cursor.execute(query, (
+        data["match_id"],
+        data["player_id"],
+        data.get("assist_player_id"),
+        data["event_type"],
+        data["minute"]
+    ))
+    return True
+
+@db_op()
+def get_players_for_match_team(cursor, match_id, team_id):
+    query = """
+        SELECT p.player_id, p.full_name
+        FROM players p
+        JOIN contracts c ON p.player_id = c.player_id
+        JOIN matches m ON m.match_id = %s
+        WHERE c.team_id = %s
+          AND m.match_date::date BETWEEN c.start_date AND COALESCE(c.end_date, '9999-12-31')
+        ORDER BY p.full_name;
+    """
+    cursor.execute(query, (match_id, team_id))
+    return cursor.fetchall()
+
+@db_op()
+def get_match_events(cursor, match_id):
+    query = """
+        SELECT me.*, p.full_name as player_name, t.name as team_name
+        FROM match_events me
+        JOIN players p ON me.player_id = p.player_id
+        JOIN teams t ON me.team_id = t.team_id
+        WHERE me.match_id = %s
+        ORDER BY me.minute;
+    """
+    cursor.execute(query, (match_id,))
     return cursor.fetchall()

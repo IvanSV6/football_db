@@ -171,7 +171,7 @@ class PlayersTab(QWidget):
             self.table.insertRow(row)
 
             item_player = QTableWidgetItem(p.get('full_name', 'Неизвестно'))
-            photo = p.get('photo')  # Или photo_path, в зависимости от твоей таблицы
+            photo = p.get('photo_path')
             if photo and os.path.exists(f"assets/players/{photo}"):
                 item_player.setIcon(QIcon(f"assets/players/{photo}"))
             self.table.setItem(row, 0, item_player)

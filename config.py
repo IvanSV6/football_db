@@ -18,7 +18,7 @@ TABLE_CONFIG = {
             {"column": "city", "label": "Город", "type": "text", "required": True},
             {"column": "founded_year", "label": "Год основания", "type": "number", "min": 1850, "max": 2026, "required": True},
             {"column": "stadium", "label": "Стадион", "type": "text"},
-            {"column": "logo_path", "label": "Эмблема", "type": "file"}
+            {"column": "logo_path", "label": "Логотип", "type": "file", "folder": "teams"}
         ]
     },
     "players": {
@@ -28,7 +28,8 @@ TABLE_CONFIG = {
             {"column": "full_name", "label": "ФИО", "type": "text", "required": True},
             {"column": "birth_date", "label": "Дата рождения", "type": "date",},
             {"column": "nationality", "label": "Гражданство", "type": "text", "required": True},
-            {"column": "position", "label": "Позиция", "type": "text"}
+            {"column": "position", "label": "Позиция", "type": "text"},
+            {"column": "photo_path", "label": "Фото", "type": "file", "folder": "players"}
         ]
     },
     "seasons": {

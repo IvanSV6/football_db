@@ -92,8 +92,9 @@ class UniversalDialog(QDialog):
             line_edit.setReadOnly(True)
             line_edit.setPlaceholderText("Файл не выбран")
 
+            target_folder = field.get("folder", "teams")
             btn_browse = QPushButton("Обзор...")
-            btn_browse.clicked.connect(lambda: self._browse_file(line_edit))
+            btn_browse.clicked.connect(lambda: self.file_selection(line_edit, target_folder))
 
             layout.addWidget(line_edit)
             layout.addWidget(btn_browse)
@@ -103,17 +104,14 @@ class UniversalDialog(QDialog):
         else:
             return QLineEdit()
 
-    def _browse_file(self, line_edit):
+    def file_selection(self, line_edit, folder_name):
         file_path, _ = QFileDialog.getOpenFileName(
             self, "Выберите эмблему", "", "Images (*.png *.jpg *.jpeg *.webp)"
         )
         if file_path:
-            target_dir = os.path.join("assets", "logos")
-            os.makedirs(target_dir, exist_ok=True)
-            file_name = os.path.basename(file_path)
-            destination = os.path.join(target_dir, file_name)
-            shutil.copy2(file_path, destination)
-            line_edit.setText(file_name)
+            saved_name = data_manager.save_logo(file_path, folder_name)
+            if saved_name:
+                line_edit.setText(saved_name)
 
     def set_widget_value(self, widget, f_type, value):
         if value is None: return

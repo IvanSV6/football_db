@@ -63,12 +63,7 @@ class MainWindow(QMainWindow):
             return
         dialog = AutorizDialog(self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            role_names = {
-                "admin": "Админ",
-                "manager": "Менеджер"
-            }
-            current_role_name = role_names.get(session.current_role, "")
-            self.autoriz_button.setText(f"Выйти ({current_role_name})")
+            self.autoriz_button.setText("Выйти")
             if session.current_role == "admin":
                 self.admin_view_mode = "admin"
                 self.btn_toggle_view.setText("Режим пользователя")

@@ -48,10 +48,25 @@ class DataManager:
     def get_teams_for_season(self, season_id):
         return queries.get_available_teams_for_season(season_id)
 
-    def save_logo(self, source_path):
+    def get_filtered_players(self,championship_id=None, season_id=None, club_id=None, position=None, nationality=None, search_text=None):
+        return queries.get_players(championship_id, season_id, club_id, position, nationality, search_text)
+
+    def get_national(self):
+        return queries.get_nationalities()
+
+    def get_match_stats(self, match_id):
+        return queries.get_stats(match_id)
+
+    def get_player_rankings(self,championship_id, season_id, event_type, is_assist):
+        return queries.get_rankings(championship_id, season_id, event_type, is_assist)
+
+    def get_events(self, match_id):
+        return queries.get_match_events(match_id)
+
+    def save_logo(self, source_path, subfolder="teams"):
         if not source_path or not os.path.exists(source_path):
             return None
-        target_dir = os.path.join("assets", "teams")
+        target_dir = os.path.join("assets", subfolder)
         os.makedirs(target_dir, exist_ok=True)
         file_name = os.path.basename(source_path)
         destination = os.path.join(target_dir, file_name)
@@ -61,13 +76,17 @@ class DataManager:
         except Exception as e:
             print(f"Ошибка сохранения файла: {e}")
             return None
-    def get_filtered_players(self,championship_id=None, season_id=None, club_id=None, position=None, nationality=None, search_text=None):
-        return queries.get_players(championship_id, season_id, club_id, position, nationality, search_text)
 
-    def get_national(self):
-        return queries.get_nationalities()
-    def get_match_stats(self, match_id):
-        return queries.get_stats(match_id)
-    def get_player_rankings(self,championship_id, season_id, event_type, is_assist):
-        return queries.get_rankings(championship_id, season_id, event_type, is_assist)
+    def get_players_for_match_team(self, match_id, team_id):
+        return queries.get_players_for_match_team(match_id, team_id)
+
+    def update_team_stats(self, stats_id, data):
+        return queries.update_record("team_stats", "stats_id", stats_id, data)
+
+    def insert_team_stats(self, data):
+        return queries.insert_record("team_stats", data)
+
+    def add_match_event(self, data):
+        return queries.insert_record("match_events", data)
+
 data_manager = DataManager()

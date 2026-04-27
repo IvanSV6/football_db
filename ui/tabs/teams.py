@@ -23,10 +23,6 @@ class TeamsTab(QWidget):
         self.championships_box.setFixedWidth(200)
         self.season_box.setFixedWidth(150)
 
-        reset_btn = QPushButton("СБРОСИТЬ ФИЛЬТРЫ")
-        reset_btn.setFlat(True)
-        reset_btn.setStyleSheet("color: #0000FF; font-weight: bold; font-size: 11px;")
-
         for label, box in [("ЧЕМПИОНАТ", self.championships_box), ("СЕЗОН", self.season_box)]:
             v_layout = QVBoxLayout()
             lbl = QLabel(label)
@@ -37,7 +33,6 @@ class TeamsTab(QWidget):
             f_layout.addSpacing(10)
 
         f_layout.addStretch()
-        f_layout.addWidget(reset_btn)
         main_layout.addLayout(f_layout)
 
         self.title_lbl = QLabel("")
@@ -60,7 +55,6 @@ class TeamsTab(QWidget):
 
         self.championships_box.currentIndexChanged.connect(self.on_championship_changed)
         self.season_box.currentIndexChanged.connect(self.refresh_teams)
-        reset_btn.clicked.connect(self.reset_filters)
 
     def load_filters(self):
         self.championships_box.blockSignals(True)
@@ -91,9 +85,6 @@ class TeamsTab(QWidget):
 
         self.season_box.blockSignals(False)
         self.refresh_teams()
-
-    def reset_filters(self):
-        self.championships_box.setCurrentIndex(0)
 
     def refresh_teams(self):
         season_id = self.season_box.currentData()
