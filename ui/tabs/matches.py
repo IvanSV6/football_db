@@ -81,8 +81,7 @@ class MatchesTab(QWidget):
         self.season_box.clear()
         seasons = data_manager.get_seasons(champ_id)
         for s in seasons:
-            label = f"{str(s['start_date'])[:4]} - {str(s['end_date'])[:4]}"
-            self.season_box.addItem(label, s['season_id'])
+            self.season_box.addItem(s['display_name'], s['season_id'])
 
 
         self.season_box.blockSignals(False)

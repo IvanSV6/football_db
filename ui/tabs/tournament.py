@@ -1,6 +1,8 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QLabel, QTableWidget,
                              QHeaderView, QHBoxLayout, QComboBox, QTableWidgetItem)
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon
+import os
 from controllers.data_manager import data_manager
 
 
@@ -64,8 +66,7 @@ class TournamentTable(QWidget):
         champ_id = self.champ_box.currentData()
         seasons = data_manager.get_seasons(champ_id)
         for s in seasons:
-            label = f"{str(s['start_date'])[:4]} - {str(s['end_date'])[:4]}"
-            self.season_box.addItem(label, s['season_id'])
+            self.season_box.addItem(s['display_name'], s['season_id'])
         self.refresh_table()
 
     def refresh_table(self):
@@ -73,27 +74,27 @@ class TournamentTable(QWidget):
         if not season_id:
             self.table.setRowCount(0)
             return
-        rows = data_manager.get_tournament_data(season_id)
+        data = data_manager.get_tournament_data(season_id)
+        self.table.setRowCount(len(data))
 
-        self.table.setRowCount(0)
-        for i, row in enumerate(rows):
-            self.table.insertRow(i)
-
+        for i, row in enumerate(data):
             self.table.setItem(i, 0, QTableWidgetItem(str(i + 1)))
-            self.table.setItem(i, 1, QTableWidgetItem(row['name']))
+
+            team_item = QTableWidgetItem(row['name'])
+            if row['full_logo_path'] and os.path.exists(row['full_logo_path']):
+                team_item.setIcon(QIcon(row['full_logo_path']))
+
+            self.table.setItem(i, 1, team_item)
             self.table.setItem(i, 2, QTableWidgetItem(str(row['played'])))
             self.table.setItem(i, 3, QTableWidgetItem(str(row['win'])))
             self.table.setItem(i, 4, QTableWidgetItem(str(row['draw'])))
             self.table.setItem(i, 5, QTableWidgetItem(str(row['loss'])))
-            self.table.setItem(i, 6, QTableWidgetItem(f"{row['gs']}-{row['ga']}"))
 
+            self.table.setItem(i, 6, QTableWidgetItem(row['goals_stat']))
             pts_item = QTableWidgetItem(str(row['pts']))
             pts_item.setData(Qt.ItemDataRole.TextAlignmentRole, Qt.AlignmentFlag.AlignCenter)
             self.table.setItem(i, 7, pts_item)
-
-            form_res = data_manager.get_team_dynamics(row['team_id'], season_id)
-            form_list = [f['res'] for f in form_res]
-            self.table.setCellWidget(i, 8, self.create_form_widget(form_list))
+            self.table.setCellWidget(i, 8, self.create_form_widget(row['form_list']))
 
     def create_form_widget(self, form_data):
         container = QWidget()

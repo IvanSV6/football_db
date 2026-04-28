@@ -27,17 +27,32 @@ class DataManager:
     def add_record(self, table_name, data):
         return queries.insert_record(table_name, data)
 
-    def get_tournament_data(self, season_id):
-        return queries.get_tournament_table(season_id)
-
     def get_team_dynamics(self, team_id, season_id):
         return queries.get_team_form(team_id, season_id)
+
+    def get_tournament_data(self, season_id):
+        data = queries.get_tournament_table(season_id)
+        for row in data:
+            logo = row.get('logo_path')
+            row['full_logo_path'] = os.path.join("assets", "teams", logo) if logo else None
+
+            row['goals_stat'] = f"{row['gs']}-{row['ga']}"
+
+            form_data = data_manager.get_team_dynamics(row['team_id'], season_id)
+            row['form_list'] = [m['res'] for m in form_data]
+
+        return data
 
     def get_filtered_matches(self, season_id, round_num, team_id):
         return queries.get_matches(season_id, round_num, team_id)
 
     def get_seasons(self,championship_id):
-        return queries.get_seasons_by_championship(championship_id)
+        seasons = queries.get_seasons_by_championship(championship_id)
+        for s in seasons:
+            start = str(s['start_date'])[:4]
+            end = str(s['end_date'])[:4]
+            s['display_name'] = f"{start} - {end}"
+        return seasons
 
     def get_teams(self,championship_id):
         return queries.get_teams_by_seasons(championship_id)

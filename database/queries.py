@@ -107,6 +107,7 @@ def get_tournament_table(cursor, season_id):
         )
         SELECT 
             t.name,
+            t.logo_path,
             COUNT(*) AS played,
             SUM(tr.win) AS win,
             SUM(tr.draw) AS draw,
@@ -117,10 +118,9 @@ def get_tournament_table(cursor, season_id):
             t.team_id
         FROM team_results tr
         JOIN teams t ON tr.team_id = t.team_id
-        GROUP BY t.team_id, t.name
+        GROUP BY t.team_id, t.name, t.logo_path
         ORDER BY pts DESC, (SUM(gs) - SUM(ga)) DESC, SUM(gs) DESC;
     """
-
     cursor.execute(query, (season_id, season_id))
     return cursor.fetchall()
 

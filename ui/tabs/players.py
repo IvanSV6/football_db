@@ -121,8 +121,7 @@ class PlayersTab(QWidget):
         if champ_id:
             seasons = data_manager.get_seasons(champ_id)
             for s in seasons:
-                label = f"{str(s['start_date'])[:4]} - {str(s['end_date'])[:4]}"
-                self.combo_season.addItem(label, s['season_id'])
+                self.combo_season.addItem(s['display_name'], s['season_id'])
 
         self.combo_season.blockSignals(False)
         self.load_teams()

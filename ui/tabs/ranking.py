@@ -91,8 +91,7 @@ class RankingTab(QWidget):
         champ_id = self.combo_champ.currentData()
         if champ_id:
             for s in data_manager.get_seasons(champ_id):
-                label = f"{str(s['start_date'])[:4]} - {str(s['end_date'])[:4]}"
-                self.combo_season.addItem(label, s['season_id'])
+                self.combo_season.addItem(s['display_name'], s['season_id'])
         self.combo_season.blockSignals(False)
         self.refresh_all_tables()
 
