@@ -137,9 +137,8 @@ class TeamCardWidget(QFrame):
         self.logo_lbl.setFixedSize(50, 50)
         self.logo_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        logo_path = self.team_data.get('logo_path')
-        full_path = os.path.join("assets", "teams", str(logo_path)) if logo_path else ""
-        if logo_path and os.path.exists(full_path):
+        full_path = self.team_data.get('full_logo_path')
+        if full_path:
             pixmap = QPixmap(full_path)
             scaled_pixmap = pixmap.scaled(
                 self.logo_lbl.size(),
@@ -149,11 +148,11 @@ class TeamCardWidget(QFrame):
             self.logo_lbl.setPixmap(scaled_pixmap)
         else:
             self.logo_lbl.setStyleSheet("""
-                background-color: #f0f0f0; 
-                border-radius: 25px; 
-                color: #ccc; 
-                font-size: 8px;
-            """)
+                        background-color: #f0f0f0; 
+                        border-radius: 25px; 
+                        color: #ccc; 
+                        font-size: 8px;
+                    """)
             self.logo_lbl.setText("")
 
         name_lbl = QLabel(self.team_data.get('name', 'Команда'))

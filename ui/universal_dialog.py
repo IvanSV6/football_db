@@ -149,63 +149,16 @@ class UniversalDialog(QDialog):
         return result
 
     def validate_data(self, data):
-        for field in self.config["fields"]:
-            col_name = field["column"]
-            f_type = field["type"]
-            label = field["label"]
+        is_valid, err_title, err_msg = data_manager.validate_universal_data(
+            title=self.config["title"],
+            data=data,
+            config_fields=self.config["fields"]
+        )
 
-            if f_type == "hidden":
-                continue
+        if not is_valid:
+            QMessageBox.warning(self, err_title, err_msg)
+            return False
 
-            val = data.get(col_name)
-            if field.get("required"):
-                if val is None or str(val).strip() == "":
-                    QMessageBox.warning(self, "Ошибка целостности", f"Поле '{label}' обязательно для заполнения!")
-                    return False
-
-            if f_type == "number" and val != "":
-                try:
-                    num_val = int(val)
-                    if "min" in field and num_val < field["min"]:
-                        QMessageBox.warning(self, "Ошибка целостности",
-                                            f"Поле '{label}' не может быть меньше {field['min']}!")
-                        return False
-                    if "max" in field and num_val > field["max"]:
-                        QMessageBox.warning(self, "Ошибка целостности",
-                                            f"Поле '{label}' не может быть больше {field['max']}!")
-                        return False
-                except ValueError:
-                    QMessageBox.warning(self, "Ошибка типа данных", f"Поле '{label}' должно быть числом!")
-                    return False
-
-        if self.config["title"] == "Матчи":
-            if data.get("home_team_id") == data.get("away_team_id"):
-                QMessageBox.warning(self, "Логическая аномалия",
-                                    "Команда 'Хозяева' и команда 'Гости' не могут совпадать!")
-                return False
-
-        if self.config["title"] in ["Контракты", "Сезоны"]:
-            if data.get("start_date") > data.get("end_date"):
-                QMessageBox.warning(self, "Временная аномалия", "Дата начала не может быть позже даты окончания!")
-                return False
-
-        if self.config["title"] == "Матчи":
-            match_date = data.get("match_date")
-            season_id = data.get("season_id")
-            if season_id:
-                season_data = data_manager._get_one("seasons", "season_id", season_id)
-                if season_data:
-                    s_start = str(season_data["start_date"])
-                    s_end = str(season_data["end_date"])
-
-                    if not (s_start <= match_date <= s_end):
-                        QMessageBox.warning(
-                            self,
-                            "Ошибка целостности",
-                            f"Дата матча ({match_date}) выходит за рамки сезона!\n"
-                            f"Сезон длится с {s_start} по {s_end}"
-                        )
-                        return False
         return True
 
     def update_teams_combos(self):

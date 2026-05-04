@@ -50,7 +50,7 @@ TABLE_CONFIG = {
             {"column": "season_id", "label": "Сезон", "type": "combo", "relation": {"table": "seasons", "id_col": "season_id", "name_col": "start_date"}},
             {"column": "home_team_id", "label": "Хозяева", "type": "combo", "relation": {"table": "teams", "id_col": "team_id", "name_col": "name"}},
             {"column": "away_team_id", "label": "Гости", "type": "combo", "relation": {"table": "teams", "id_col": "team_id", "name_col": "name"}},
-            {"column": "match_date", "label": "Дата и время", "type": "date", "required": True},
+            {"column": "match_date", "label": "Дата матча", "type": "date", "required": True},
             {"column": "tour", "label": "Тур", "type": "number", "min": 1, "required": True},
             {"column": "home_score", "label": "Голы (Дома)", "type": "number", "min": 0, "required": True},
             {"column": "away_score", "label": "Голы (В гостях)", "type": "number", "min": 0, "required": True},

@@ -81,7 +81,7 @@ class TournamentTable(QWidget):
             self.table.setItem(i, 0, QTableWidgetItem(str(i + 1)))
 
             team_item = QTableWidgetItem(row['name'])
-            if row['full_logo_path'] and os.path.exists(row['full_logo_path']):
+            if row.get('full_logo_path'):
                 team_item.setIcon(QIcon(row['full_logo_path']))
 
             self.table.setItem(i, 1, team_item)

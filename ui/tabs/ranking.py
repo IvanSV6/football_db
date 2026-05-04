@@ -114,9 +114,9 @@ class RankingTab(QWidget):
             table.insertRow(row)
 
             item_player = QTableWidgetItem(p['full_name'])
-            photo = p.get('photo_path')
-            if photo and os.path.exists(f"assets/players/{photo}"):
-                item_player.setIcon(QIcon(f"assets/players/{photo}"))
+            photo = p.get('full_photo_path')
+            if photo:
+                item_player.setIcon(QIcon(photo))
             table.setItem(row, 0, item_player)
 
             table.setItem(row, 1, QTableWidgetItem(p.get('team_name') or "-"))

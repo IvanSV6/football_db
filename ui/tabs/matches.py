@@ -588,70 +588,46 @@ class MatchEditDialog(QDialog):
                 QMessageBox.critical(self, "Ошибка", "Не удалось добавить событие")
 
     def save_changes(self):
-        home_p = self.home_poss.value()
-        away_p = self.away_poss.value()
-
-        if home_p + away_p != 100:
-            QMessageBox.warning(self, "Ошибка ввода", "Сумма владения мячом (Хозяева + Гости) должна быть ровно 100%.")
-            return
-
-        if self.home_shots_on.value() > self.home_shots.value():
-            QMessageBox.warning(self, "Ошибка ввода",
-                                "Удары в створ хозяев не могут превышать их общее количество ударов.")
-            return
-
-        if self.away_shots_on.value() > self.away_shots.value():
-            QMessageBox.warning(self, "Ошибка ввода",
-                                "Удары в створ гостей не могут превышать их общее количество ударов.")
-            return
-
         match_id = self.match_data["match_id"]
+        home_team = self.match_data["home_team"]
 
-        data_manager.up_record("matches", match_id, {
+        match_update = {
             "home_score": self.spin_home.value(),
             "away_score": self.spin_away.value(),
             "status": self.combo_status.currentText()
-        })
+        }
 
-        stats = data_manager.get_match_stats(match_id)
+        stats_home = {
+            "match_id": match_id,
+            "team_id": self.match_data["home_team_id"],
+            "possession": self.home_poss.value(),
+            "shots": self.home_shots.value(),
+            "shots_on_target": self.home_shots_on.value(),
+            "corners": self.home_corners.value(),
+            "fouls": self.home_fouls.value(),
+            "offsides": self.home_offsides.value(),
+        }
 
-        if stats and len(stats) == 2:
-            for s in stats:
-                is_home = s["team_name"] == self.match_data["home_team"]
+        stats_away = {
+            "match_id": match_id,
+            "team_id": self.match_data["away_team_id"],
+            "possession": self.away_poss.value(),
+            "shots": self.away_shots.value(),
+            "shots_on_target": self.away_shots_on.value(),
+            "corners": self.away_corners.value(),
+            "fouls": self.away_fouls.value(),
+            "offsides": self.away_offsides.value(),
+        }
 
-                data_manager.update_team_stats(s["stats_id"], {
-                    "possession": self.home_poss.value() if is_home else self.away_poss.value(),
-                    "shots": self.home_shots.value() if is_home else self.away_shots.value(),
-                    "shots_on_target": self.home_shots_on.value() if is_home else self.away_shots_on.value(),
-                    "corners": self.home_corners.value() if is_home else self.away_corners.value(),
-                    "fouls": self.home_fouls.value() if is_home else self.away_fouls.value(),
-                    "offsides": self.home_offsides.value() if is_home else self.away_offsides.value(),
-                })
+        success, title, msg = data_manager.update_match_and_stats(
+            match_id, home_team, match_update, stats_home, stats_away
+        )
+
+        if success:
+            QMessageBox.information(self, title, msg)
+            self.accept()
         else:
-            data_manager.insert_team_stats({
-                "match_id": match_id,
-                "team_id": self.match_data["home_team_id"],
-                "possession": self.home_poss.value(),
-                "shots": self.home_shots.value(),
-                "shots_on_target": self.home_shots_on.value(),
-                "corners": self.home_corners.value(),
-                "fouls": self.home_fouls.value(),
-                "offsides": self.home_offsides.value(),
-            })
-
-            data_manager.insert_team_stats({
-                "match_id": match_id,
-                "team_id": self.match_data["away_team_id"],
-                "possession": self.away_poss.value(),
-                "shots": self.away_shots.value(),
-                "shots_on_target": self.away_shots_on.value(),
-                "corners": self.away_corners.value(),
-                "fouls": self.away_fouls.value(),
-                "offsides": self.away_offsides.value(),
-            })
-
-        QMessageBox.information(self, "Успех", "Сохранено!")
-        self.accept()
+            QMessageBox.warning(self, title, msg)
 
 
 class AddEventDialog(QDialog):

@@ -1,4 +1,3 @@
-import os
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QComboBox,
                              QLineEdit, QTableWidget, QTableWidgetItem,
                              QHeaderView, QLabel)
@@ -170,16 +169,16 @@ class PlayersTab(QWidget):
             self.table.insertRow(row)
 
             item_player = QTableWidgetItem(p.get('full_name', 'Неизвестно'))
-            photo = p.get('photo_path')
-            if photo and os.path.exists(f"assets/players/{photo}"):
-                item_player.setIcon(QIcon(f"assets/players/{photo}"))
+            photo = p.get('full_photo_path')
+            if photo:
+                item_player.setIcon(QIcon(photo))
             self.table.setItem(row, 0, item_player)
 
             team_name = p.get('team_name') or "Свободный агент"
             item_club = QTableWidgetItem(team_name)
-            logo = p.get('logo_path')
-            if logo and os.path.exists(f"assets/teams/{logo}"):
-                item_club.setIcon(QIcon(f"assets/teams/{logo}"))
+            logo = p.get('full_logo_path')
+            if logo:
+                item_club.setIcon(QIcon(logo))
             self.table.setItem(row, 1, item_club)
 
             self.table.setItem(row, 2, QTableWidgetItem(p.get('position', '-')))
